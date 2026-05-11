@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>时空能量课堂·六合归元 | 地支融合消消乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff9ef;
+            background: radial-gradient(ellipse at 30% 35%, #fff3e4, #feebd4);
+            font-family: 'Segoe UI', 'Quicksand', system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.8rem;
+        }
+
+        /* 游戏主容器 - 缩小内边距适应手机 */
+        .game-container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(255, 248, 235, 0.85);
+            border-radius: 2rem;
+            padding: 0.8rem 1rem 1.2rem;
+            box-shadow: 0 15px 28px rgba(120, 70, 25, 0.12), 0 4px 8px rgba(0,0,0,0.05);
+            backdrop-filter: blur(2px);
+        }
+
+        /* 标题区 */
+        .hero-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #1e6fdf;
+            text-shadow: none;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-title::after {
+            content: none;
+        }
+
+        /* 状态栏 */
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 0.2rem 0.5rem 0.8rem 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .pair-counter {
+            background: #ecd9c0;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #7c4a2a;
+            font-size: 0.85rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .pair-counter span {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #c26f2e;
+            margin: 0 2px;
+        }
+        .reset-btn {
+            background: #ebd5bc;
+            border: none;
+            padding: 0.35rem 1rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #8b5a34;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 3px 0 #b78f66;
+            font-family: inherit;
+        }
+        .reset-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #b78f66;
+        }
+
+        /* 音量控制按钮 */
+        .sound-control {
+            background: #ebd5bc;
+            border: none;
+            padding: 0.35rem 0.8rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #8b5a34;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 0 #b78f66;
+            margin-left: 0.3rem;
+        }
+        .sound-control:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 0 #b78f66;
+        }
+
+        /* 泡泡网格 */
+        .bubble-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(65px, 85px));
+            gap: 0.8rem 0.6rem;
+            justify-items: center;
+            align-items: center;
+            justify-content: center;
+            margin: 0.8rem 0 1.2rem;
+            padding: 0.2rem;
+            position: relative;
+        }
+
+        /* 基础泡泡样式 */
+        .bubble {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            max-width: 85px;
+            min-width: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #3a3a3a;
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            box-shadow: 0 12px 12px -8px rgba(0, 0, 0, 0.3),
+                        0 0 0 2px rgba(255, 240, 180, 0.6),
+                        inset 0 -8px 0 rgba(0, 0, 0, 0.15),
+                        inset 0 3px 8px rgba(255, 255, 245, 0.8);
+            background-size: 100% 100%;
+            will-change: transform;
+            position: relative;
+            z-index: 5;
+        }
+        .bubble:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 16px -10px rgba(0, 0, 0, 0.4), inset 0 -5px 0 rgba(0, 0, 0, 0.1), inset 0 2px 8px rgba(255,255,210,0.9);
+        }
+        .bubble.selected {
+            background: radial-gradient(circle at 35% 30%, #5a9eff, #1e62d0) !important;
+            box-shadow: 0 12px 14px -6px rgba(0, 80, 200, 0.5), inset 0 -4px 0 #003c9e, inset 0 2px 8px #add8ff;
+            transform: scale(0.96);
+            color: white;
+            text-shadow: 0 1px 2px black;
+        }
+
+        .flying-bubble {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.2, 0.85, 0.4, 1.2);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            will-change: left, top, width, height;
+        }
+
+        .bubble.merged {
+            transform: scale(1.15);
+            z-index: 15;
+            cursor: default;
+            pointer-events: none;
+            font-size: 0.9rem;
+            font-weight: 800;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            background: radial-gradient(circle at 35% 35%, #FFD966, #E6A017) !important;
+            box-shadow: 0 12px 16px -5px rgba(200,120,30,0.5), inset 0 -4px 0 #aa6f2c, inset 0 2px 8px #ffeaac;
+            transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.6, 1.1), box-shadow 0.2s;
+            color: #2c2c2c;
+            text-shadow: 0 1px 1px rgba(255,255,200,0.6);
+        }
+        .bubble.merged:hover {
+            transform: scale(1.17);
+        }
+
+        .success-overlay {
+            text-align: center;
+            background: #fef0e0;
+            margin: 0.3rem auto 0;
+            padding: 0.6rem;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #da9147;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border: 1px solid #ffdcb0;
+            animation: popWin 0.4s ease;
+        }
+        @keyframes popWin {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        body.game-completed .bubble:not(.merged) {
+            pointer-events: none;
+            filter: grayscale(0.1);
+            cursor: default;
+        }
+        
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #bb8a62;
+            margin-top: 0.4rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .bubble-grid {
+                grid-template-columns: repeat(4, minmax(58px, 72px));
+                gap: 0.6rem 0.5rem;
+            }
+            .bubble {
+                font-size: 1.2rem;
+                min-width: 58px;
+            }
+            .bubble.merged {
+                font-size: 0.75rem;
+                transform: scale(1.1);
+            }
+            .hero-title {
+                font-size: 1.6rem;
+            }
+            .success-overlay {
+                font-size: 1rem;
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="hero-title">时空能量课堂-六合</div>
+    <div class="info-bar">
+        <div class="pair-counter">🧬 地支六合 · <span id="mergedCount">0</span> / <span id="totalPairs">6</span></div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="reset-btn" id="resetGameBtn">🌀 重启乾坤</button>
+            <button class="sound-control" id="soundToggleBtn">🔊 音效开</button>
+        </div>
+    </div>
+    <div class="bubble-grid" id="bubbleGrid"></div>
+    <div id="victoryMessage" style="min-height: 55px;"></div>
+    <footer>✨ 点击配对 · 有音效 ✨</footer>
+</div>
+
+<script>
+    // ==================== 音效系统 ====================
+    // 使用 Web Audio API 生成合成音效，无需外部文件，且兼容性好
+    let audioCtx = null;
+    let soundEnabled = true;
+    
+    // 初始化音频上下文（需要在用户首次点击时激活）
+    function initAudio() {
+        if (audioCtx) return audioCtx;
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        } catch (e) {
+            console.log("Web Audio API not supported");
+            return null;
+        }
+    }
+    
+    // 播放成功音效 (清脆的 "叮" 声)
+    function playSuccessSound() {
+        if (!soundEnabled) return;
+        try {
+            const ctx = initAudio();
+            if (!ctx) return;
+            // 确保音频上下文是激活状态
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            const now = ctx.currentTime;
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 880; // A5 高音
+            gainNode.gain.setValueAtTime(0.3, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+            oscillator.start(now);
+            oscillator.stop(now + 0.35);
+            // 再加一个低音谐波
+            const oscillator2 = ctx.createOscillator();
+            const gainNode2 = ctx.createGain();
+            oscillator2.connect(gainNode2);
+            gainNode2.connect(ctx.destination);
+            oscillator2.type = 'sine';
+            oscillator2.frequency.value = 660;
+            gainNode2.gain.setValueAtTime(0.15, now);
+            gainNode2.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+            oscillator2.start(now + 0.05);
+            oscillator2.stop(now + 0.4);
+        } catch(e) { console.log("音效播放失败", e); }
+    }
+    
+    // 播放失败音效 (短促的 "噗" 声)
+    function playFailSound() {
+        if (!soundEnabled) return;
+        try {
+            const ctx = initAudio();
+            if (!ctx) return;
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            const now = ctx.currentTime;
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            oscillator.type = 'triangle';
+            oscillator.frequency.value = 220;
+            gainNode.gain.setValueAtTime(0.25, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+            oscillator.start(now);
+            oscillator.stop(now + 0.2);
+        } catch(e) { console.log("音效播放失败", e); }
+    }
+    
+    // 播放胜利音效 (欢快的小旋律)
+    function playVictorySound() {
+        if (!soundEnabled) return;
+        try {
+            const ctx = initAudio();
+            if (!ctx) return;
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            const notes = [523.25, 587.33, 659.25, 523.25, 587.33, 659.25, 783.99]; // C D E C D E G
+            const durations = [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.4];
+            let time = ctx.currentTime;
+            for (let i = 0; i < notes.length; i++) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = notes[i];
+                gain.gain.setValueAtTime(0.2, time);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + durations[i]);
+                osc.start(time);
+                osc.stop(time + durations[i]);
+                time += durations[i];
+            }
+        } catch(e) { console.log("胜利音效播放失败", e); }
+    }
+    
+    // 唤醒音频（用户首次点击任何交互时调用）
+    let audioActivated = false;
+    function activateAudio() {
+        if (audioActivated) return;
+        const ctx = initAudio();
+        if (ctx && ctx.state === 'suspended') {
+            ctx.resume();
+        }
+        audioActivated = true;
+    }
+    
+    // 音效开关
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('soundToggleBtn');
+        if (btn) {
+            btn.textContent = soundEnabled ? "🔊 音效开" : "🔇 音效关";
+        }
+    }
+    
+    // ==================== 游戏逻辑 ====================
+    const RAW_WORDS = ['子', '丑', '寅', '亥', '卯', '戌', '辰', '酉', '巳', '申', '午', '未'];
+    
+    const PAIR_MAP = {
+        '子': '丑', '丑': '子',
+        '寅': '亥', '亥': '寅',
+        '卯': '戌', '戌': '卯',
+        '辰': '酉', '酉': '辰',
+        '巳': '申', '申': '巳',
+        '午': '未', '未': '午'
+    };
+    
+    const MERGED_NAME = {
+        '子丑': '子丑合', '丑子': '子丑合',
+        '寅亥': '寅亥合', '亥寅': '寅亥合',
+        '卯戌': '卯戌合', '戌卯': '卯戌合',
+        '辰酉': '辰酉合', '酉辰': '辰酉合',
+        '巳申': '巳申合', '申巳': '巳申合',
+        '午未': '午未合', '未午': '午未合'
+    };
+    
+    function getColorForWord(word) {
+        if (word === '子' || word === '亥') {
+            return "radial-gradient(circle at 35% 30%, #4d9eff, #1e6ad0)";
+        }
+        if (word === '寅' || word === '卯') {
+            return "radial-gradient(circle at 35% 30%, #5fcc7b, #2e8c48)";
+        }
+        if (word === '申' || word === '酉') {
+            return "radial-gradient(circle at 35% 30%, #f5f7fa, #d6dce5)";
+        }
+        if (word === '丑' || word === '辰' || word === '未' || word === '戌') {
+            return "radial-gradient(circle at 35% 30%, #ca9a6e, #9b6a3c)";
+        }
+        if (word === '巳' || word === '午') {
+            return "radial-gradient(circle at 35% 30%, #ff8a7a, #e35f4a)";
+        }
+        return "radial-gradient(circle at 35% 30%, #F9B572, #E2842B)";
+    }
+    
+    const gridContainer = document.getElementById('bubbleGrid');
+    const mergedSpan = document.getElementById('mergedCount');
+    const totalPairsSpan = document.getElementById('totalPairs');
+    const victoryDiv = document.getElementById('victoryMessage');
+    const resetBtn = document.getElementById('resetGameBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    
+    let currentSelected = null;
+    let mergedPairs = 0;
+    let gameCompleted = false;
+    const TOTAL_PAIRS = 6;
+    let animationLock = false;
+    
+    function updateMergeUI() {
+        mergedSpan.innerText = mergedPairs;
+    }
+    
+    function clearSelected() {
+        if (currentSelected) {
+            if (currentSelected.classList.contains('selected')) {
+                currentSelected.classList.remove('selected');
+                if (currentSelected.dataset.originalBg && !currentSelected.classList.contains('merged')) {
+                    currentSelected.style.background = currentSelected.dataset.originalBg;
+                    currentSelected.style.boxShadow = "0 12px 12px -8px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -8px 0 rgba(0, 0, 0, 0.15), inset 0 3px 8px rgba(255, 255, 245, 0.8)";
+                }
+            }
+            currentSelected = null;
+        }
+    }
+    
+    function getElementViewportRect(el) {
+        const rect = el.getBoundingClientRect();
+        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    }
+    
+    async function animateAndMerge(bubbleFrom, bubbleTo, mergedText) {
+        return new Promise((resolve) => {
+            const fromRect = getElementViewportRect(bubbleFrom);
+            const toRect = getElementViewportRect(bubbleTo);
+            
+            const flyer = document.createElement('div');
+            flyer.className = 'flying-bubble';
+            const computedStyle = window.getComputedStyle(bubbleFrom);
+            flyer.style.background = computedStyle.background;
+            flyer.style.width = `${fromRect.width}px`;
+            flyer.style.height = `${fromRect.height}px`;
+            flyer.style.left = `${fromRect.left}px`;
+            flyer.style.top = `${fromRect.top}px`;
+            flyer.style.boxShadow = computedStyle.boxShadow;
+            flyer.style.borderRadius = '50%';
+            flyer.style.position = 'fixed';
+            flyer.style.opacity = '0.95';
+            document.body.appendChild(flyer);
+            
+            const endLeft = toRect.left + (toRect.width / 2) - (fromRect.width / 2);
+            const endTop = toRect.top + (toRect.height / 2) - (fromRect.height / 2);
+            
+            requestAnimationFrame(() => {
+                flyer.style.transition = 'all 0.3s cubic-bezier(0.2, 0.85, 0.4, 1.1)';
+                flyer.style.left = `${endLeft}px`;
+                flyer.style.top = `${endTop}px`;
+                flyer.style.width = `${toRect.width}px`;
+                flyer.style.height = `${toRect.height}px`;
+                flyer.style.opacity = '0.9';
+            });
+            
+            const onFinish = () => {
+                if (flyer && flyer.remove) flyer.remove();
+                if (!bubbleTo.classList.contains('merged') && !bubbleFrom.classList.contains('merged')) {
+                    bubbleTo.classList.add('merged');
+                    bubbleTo.textContent = mergedText;
+                    bubbleTo.style.transform = 'scale(1.15)';
+                    bubbleTo.style.background = "radial-gradient(circle at 35% 35%, #FFD966, #E6A017)";
+                    bubbleTo.style.boxShadow = "0 12px 16px -5px rgba(200,120,30,0.5), inset 0 -4px 0 #aa6f2c, inset 0 2px 8px #ffeaac";
+                    bubbleTo.style.fontSize = '0.9rem';
+                    bubbleTo.style.whiteSpace = 'nowrap';
+                    bubbleTo.style.color = '#2c2c2c';
+                    
+                    if (bubbleFrom.parentNode) {
+                        bubbleFrom.style.visibility = 'hidden';
+                        bubbleFrom.style.pointerEvents = 'none';
+                        bubbleFrom.style.opacity = '0';
+                        bubbleFrom.style.transform = 'scale(0)';
+                        bubbleFrom.style.transition = 'all 0.1s';
+                    }
+                    mergedPairs++;
+                    updateMergeUI();
+                    if (currentSelected === bubbleFrom || currentSelected === bubbleTo) clearSelected();
+                    checkAllMerged();
+                }
+                resolve();
+            };
+            
+            flyer.addEventListener('transitionend', onFinish, { once: true });
+            setTimeout(() => {
+                if (flyer && flyer.remove) {
+                    flyer.remove();
+                    if (!bubbleTo.classList.contains('merged')) {
+                        bubbleTo.classList.add('merged');
+                        bubbleTo.textContent = mergedText;
+                        bubbleTo.style.transform = 'scale(1.15)';
+                        bubbleTo.style.background = "radial-gradient(circle at 35% 35%, #FFD966, #E6A017)";
+                        bubbleTo.style.color = '#2c2c2c';
+                        if (bubbleFrom.parentNode) bubbleFrom.style.visibility = 'hidden';
+                        mergedPairs++;
+                        updateMergeUI();
+                        if (currentSelected === bubbleFrom || currentSelected === bubbleTo) clearSelected();
+                        checkAllMerged();
+                    }
+                    resolve();
+                }
+            }, 400);
+        });
+    }
+    
+    async function successMerge(firstBubble, secondBubble) {
+        if (animationLock) return false;
+        animationLock = true;
+        
+        // 播放成功音效
+        playSuccessSound();
+        
+        const wordA = firstBubble.dataset.word;
+        const wordB = secondBubble.dataset.word;
+        const key = wordA + wordB;
+        let mergeText = MERGED_NAME[key] || (wordA + wordB + '合');
+        if (!mergeText.includes('合')) mergeText = mergeText + '合';
+        
+        if (firstBubble.classList.contains('selected')) firstBubble.classList.remove('selected');
+        if (secondBubble.classList.contains('selected')) secondBubble.classList.remove('selected');
+        clearSelected();
+        
+        await animateAndMerge(firstBubble, secondBubble, mergeText);
+        animationLock = false;
+        return true;
+    }
+    
+    function failReset(firstBubble) {
+        // 播放失败音效
+        playFailSound();
+        
+        if (firstBubble && !firstBubble.classList.contains('merged') && firstBubble.style.visibility !== 'hidden') {
+            if (firstBubble.classList.contains('selected')) {
+                firstBubble.classList.remove('selected');
+                const orig = firstBubble.dataset.originalBg;
+                if (orig) firstBubble.style.background = orig;
+                firstBubble.style.boxShadow = "0 12px 12px -8px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -8px 0 rgba(0, 0, 0, 0.15), inset 0 3px 8px rgba(255, 255, 245, 0.8)";
+            }
+        }
+        currentSelected = null;
+    }
+    
+    function checkAllMerged() {
+        if (mergedPairs === TOTAL_PAIRS && !gameCompleted) {
+            gameCompleted = true;
+            document.body.classList.add('game-completed');
+            victoryDiv.innerHTML = '<div class="success-overlay">🎉 恭喜你挑战成功！六合归元，时空共振 🎉</div>';
+            clearSelected();
+            // 播放胜利音效
+            playVictorySound();
+        } else if (mergedPairs !== TOTAL_PAIRS && victoryDiv.innerHTML !== '') {
+            victoryDiv.innerHTML = '';
+        }
+    }
+    
+    function resetGame() {
+        if (animationLock) return;
+        gameCompleted = false;
+        mergedPairs = 0;
+        updateMergeUI();
+        victoryDiv.innerHTML = '';
+        document.body.classList.remove('game-completed');
+        clearSelected();
+        currentSelected = null;
+        renderFreshBoard();
+        animationLock = false;
+    }
+    
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+    
+    function renderFreshBoard() {
+        gridContainer.innerHTML = '';
+        let shuffledWords = shuffleArray([...RAW_WORDS]);
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < shuffledWords.length; i++) {
+            const word = shuffledWords[i];
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = word;
+            bubble.dataset.word = word;
+            bubble.dataset.matchTo = PAIR_MAP[word];
+            const colorStyle = getColorForWord(word);
+            bubble.style.background = colorStyle;
+            bubble.dataset.originalBg = colorStyle;
+            bubble.style.color = '#3a3a3a';
+            bubble.style.boxShadow = "0 12px 12px -8px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -8px 0 rgba(0, 0, 0, 0.15), inset 0 3px 8px rgba(255, 255, 245, 0.8)";
+            fragment.appendChild(bubble);
+        }
+        gridContainer.appendChild(fragment);
+    }
+    
+    async function onGridClick(e) {
+        // 首次点击时激活音频
+        activateAudio();
+        
+        if (animationLock || gameCompleted) return;
+        const target = e.target.closest('.bubble');
+        if (!target) return;
+        if (target.classList.contains('merged') || target.style.visibility === 'hidden' || target.style.opacity === '0') return;
+        
+        if (currentSelected === null) {
+            clearSelected();
+            target.classList.add('selected');
+            currentSelected = target;
+            return;
+        }
+        
+        if (currentSelected === target) {
+            clearSelected();
+            return;
+        }
+        
+        const first = currentSelected;
+        const second = target;
+        const isMatch = (first.dataset.matchTo === second.dataset.word);
+        
+        if (isMatch) {
+            if (first.classList.contains('selected')) first.classList.remove('selected');
+            currentSelected = null;
+            await successMerge(first, second);
+        } else {
+            failReset(first);
+        }
+    }
+    
+    // 事件绑定
+    resetBtn.addEventListener('click', () => {
+        if (animationLock) return;
+        resetGame();
+    });
+    soundToggleBtn.addEventListener('click', toggleSound);
+    
+    function init() {
+        totalPairsSpan.innerText = TOTAL_PAIRS;
+        renderFreshBoard();
+        gridContainer.addEventListener('click', onGridClick);
+        mergedPairs = 0;
+        updateMergeUI();
+        gameCompleted = false;
+        currentSelected = null;
+        animationLock = false;
+        document.body.classList.remove('game-completed');
+        victoryDiv.innerHTML = '';
+    }
+    
+    init();
+</script>
+</body>
+</html>
