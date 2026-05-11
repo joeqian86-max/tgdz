@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>时空能量课堂·六合归元 | 地支融合消消乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff9ef;
+            background: radial-gradient(ellipse at 30% 35%, #fff3e4, #feebd4);
+            font-family: 'Segoe UI', 'Quicksand', system-ui, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        /* 游戏主容器 */
+        .game-container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 248, 235, 0.7);
+            border-radius: 4rem;
+            padding: 1rem 1.5rem 2rem;
+            box-shadow: 0 25px 38px rgba(120, 70, 25, 0.12), 0 6px 12px rgba(0,0,0,0.05);
+            backdrop-filter: blur(2px);
+            transition: all 0.2s;
+        }
+
+        /* 标题区 - 纯蓝色，无描边，无发光，字体放大30%（原3rem变为3.9rem） */
+        .hero-title {
+            text-align: center;
+            font-size: 3.9rem;          /* 放大30% 原3rem -> 3.9rem */
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #1e6fdf;              /* 纯蓝色字体 */
+            text-shadow: none;            /* 无发光、无描边 */
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        /* 完全移除副标题伪元素 */
+        .hero-title::after {
+            content: none;
+        }
+
+        /* 状态栏 - 文字“地支六合” */
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 0.5rem 1rem 1.2rem 1rem;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .pair-counter {
+            background: #ecd9c0;
+            padding: 0.4rem 1.3rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #7c4a2a;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03), 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .pair-counter span {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #c26f2e;
+            margin: 0 4px;
+        }
+        .reset-btn {
+            background: #ebd5bc;
+            border: none;
+            padding: 0.45rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #8b5a34;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 5px 0 #b78f66;
+            font-family: inherit;
+        }
+        .reset-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b78f66;
+        }
+
+        /* 泡泡网格 */
+        .bubble-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(105px, 1fr));
+            gap: 1.6rem 1.2rem;
+            justify-items: center;
+            align-items: center;
+            margin: 1.2rem 0 2rem;
+            padding: 0.2rem;
+            position: relative;
+        }
+
+        /* 基础泡泡样式 (3D立体) 字体深灰色 */
+        .bubble {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            max-width: 135px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: #3a3a3a;            /* 深灰色字体 */
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            box-shadow: 0 20px 18px -10px rgba(0, 0, 0, 0.3),
+                        0 0 0 2px rgba(255, 240, 180, 0.6),
+                        inset 0 -12px 0 rgba(0, 0, 0, 0.15),
+                        inset 0 4px 10px rgba(255, 255, 245, 0.8);
+            background-size: 100% 100%;
+            will-change: transform;
+            position: relative;
+            z-index: 5;
+        }
+        .bubble:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 22px -12px rgba(0, 0, 0, 0.4), inset 0 -8px 0 rgba(0, 0, 0, 0.1), inset 0 3px 12px rgba(255,255,210,0.9);
+        }
+        /* 选中状态蓝色高亮，但保留深灰字体可见 */
+        .bubble.selected {
+            background: radial-gradient(circle at 35% 30%, #5a9eff, #1e62d0) !important;
+            box-shadow: 0 18px 20px -8px rgba(0, 80, 200, 0.5), inset 0 -6px 0 #003c9e, inset 0 3px 12px #add8ff;
+            transform: scale(0.98);
+            color: white;  /* 选中时字体变白提高对比，不影响规则，视觉友好 */
+            text-shadow: 0 1px 3px black;
+        }
+
+        /* 动画相关：飞行的泡泡元素（临时克隆） */
+        .flying-bubble {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.2, 0.85, 0.4, 1.2);
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
+            will-change: left, top, width, height;
+        }
+
+        /* 最终合并后的泡泡 (merged) —— 放大至原始1.2倍，显示六合词，背景金色，字体深灰 */
+        .bubble.merged {
+            transform: scale(1.2);
+            z-index: 15;
+            cursor: default;
+            pointer-events: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            background: radial-gradient(circle at 35% 35%, #FFD966, #E6A017) !important;
+            box-shadow: 0 18px 22px -6px rgba(200,120,30,0.5), inset 0 -6px 0 #aa6f2c, inset 0 3px 12px #ffeaac;
+            transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.6, 1.1), box-shadow 0.2s;
+            color: #2c2c2c;           /* 深灰字体 */
+            text-shadow: 0 1px 1px rgba(255,255,200,0.6);
+        }
+        .bubble.merged:hover {
+            transform: scale(1.22);
+        }
+        /* 响应式手机略微调整 */
+        @media (max-width: 680px) {
+            .bubble.merged {
+                transform: scale(1.15);
+                font-size: 0.95rem;
+            }
+            .hero-title {
+                font-size: 2.4rem;   /* 移动端适当缩小但比例保持放大 */
+            }
+        }
+
+        /* 胜利信息 */
+        .success-overlay {
+            text-align: center;
+            background: #fef0e0;
+            margin: 0.5rem auto 0;
+            padding: 1rem;
+            border-radius: 60px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #da9147;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+            border: 1px solid #ffdcb0;
+            animation: popWin 0.4s ease;
+        }
+        @keyframes popWin {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 游戏结束全禁用 */
+        body.game-completed .bubble:not(.merged) {
+            pointer-events: none;
+            filter: grayscale(0.1);
+            cursor: default;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #bb8a62;
+            margin-top: 0.6rem;
+            font-weight: 500;
+        }
+        @media (max-width: 680px) {
+            .bubble-grid {
+                gap: 1rem;
+                grid-template-columns: repeat(4, minmax(72px, 1fr));
+            }
+            .bubble {
+                font-size: 1.4rem;
+            }
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            .success-overlay {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="hero-title">时空能量课堂-六合</div>
+    <div class="info-bar">
+        <div class="pair-counter">🧬 地支六合 · <span id="mergedCount">0</span> / <span id="totalPairs">6</span></div>
+        <button class="reset-btn" id="resetGameBtn">🌀 重启乾坤</button>
+    </div>
+    <div class="bubble-grid" id="bubbleGrid"></div>
+    <div id="victoryMessage" style="min-height: 75px;"></div>
+    <footer>✨ 点击配对 ✨</footer>
+</div>
+
+<script>
+    // ---------- 配对数据 ----------
+    const RAW_WORDS = ['子', '丑', '寅', '亥', '卯', '戌', '辰', '酉', '巳', '申', '午', '未'];
+    
+    const PAIR_MAP = {
+        '子': '丑', '丑': '子',
+        '寅': '亥', '亥': '寅',
+        '卯': '戌', '戌': '卯',
+        '辰': '酉', '酉': '辰',
+        '巳': '申', '申': '巳',
+        '午': '未', '未': '午'
+    };
+    
+    const MERGED_NAME = {
+        '子丑': '子丑合', '丑子': '子丑合',
+        '寅亥': '寅亥合', '亥寅': '寅亥合',
+        '卯戌': '卯戌合', '戌卯': '卯戌合',
+        '辰酉': '辰酉合', '酉辰': '辰酉合',
+        '巳申': '巳申合', '申巳': '巳申合',
+        '午未': '午未合', '未午': '午未合'
+    };
+    
+    // ----- 根据词根定义5种泡泡色系（3D立体渐变）-----
+    // 规则：子、亥 → 蓝色系；寅、卯 → 绿色系；申、酉 → 白色/银白；丑、辰、未、戌 → 棕色系；巳、午 → 浅红色系
+    function getColorForWord(word) {
+        if (word === '子' || word === '亥') {
+            // 蓝色系: 深海蓝 -> 亮钴蓝
+            return "radial-gradient(circle at 35% 30%, #4d9eff, #1e6ad0)";
+        }
+        if (word === '寅' || word === '卯') {
+            // 绿色系: 翠绿 -> 森林绿
+            return "radial-gradient(circle at 35% 30%, #5fcc7b, #2e8c48)";
+        }
+        if (word === '申' || word === '酉') {
+            // 白色/银白: 珍珠白 -> 浅银灰 带立体感
+            return "radial-gradient(circle at 35% 30%, #f5f7fa, #d6dce5)";
+        }
+        if (word === '丑' || word === '辰' || word === '未' || word === '戌') {
+            // 棕色系: 暖棕/巧克力
+            return "radial-gradient(circle at 35% 30%, #ca9a6e, #9b6a3c)";
+        }
+        if (word === '巳' || word === '午') {
+            // 浅红色系: 珊瑚粉 / 淡朱红
+            return "radial-gradient(circle at 35% 30%, #ff8a7a, #e35f4a)";
+        }
+        // fallback 橙色
+        return "radial-gradient(circle at 35% 30%, #F9B572, #E2842B)";
+    }
+    
+    // DOM 元素
+    const gridContainer = document.getElementById('bubbleGrid');
+    const mergedSpan = document.getElementById('mergedCount');
+    const totalPairsSpan = document.getElementById('totalPairs');
+    const victoryDiv = document.getElementById('victoryMessage');
+    const resetBtn = document.getElementById('resetGameBtn');
+    
+    let currentSelected = null;      // 当前高亮泡泡
+    let mergedPairs = 0;             // 已合并对数
+    let gameCompleted = false;
+    const TOTAL_PAIRS = 6;
+    let animationLock = false;       // 防止动画过程中再次触发点击
+    
+    // 更新UI
+    function updateMergeUI() {
+        mergedSpan.innerText = mergedPairs;
+    }
+    
+    // 清除选中的视觉与引用
+    function clearSelected() {
+        if (currentSelected) {
+            if (currentSelected.classList.contains('selected')) {
+                currentSelected.classList.remove('selected');
+                if (currentSelected.dataset.originalBg && !currentSelected.classList.contains('merged')) {
+                    currentSelected.style.background = currentSelected.dataset.originalBg;
+                    // 同时恢复阴影 (保持立体)
+                    currentSelected.style.boxShadow = "0 20px 18px -10px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -12px 0 rgba(0, 0, 0, 0.15), inset 0 4px 10px rgba(255, 255, 245, 0.8)";
+                }
+            }
+            currentSelected = null;
+        }
+    }
+    
+    // 获取元素相对于视口的位置 (用于飞行动画)
+    function getElementViewportRect(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+            centerX: rect.left + rect.width / 2,
+            centerY: rect.top + rect.height / 2
+        };
+    }
+    
+    // 飞行动画 + 合并: bubbleFrom 飞向 bubbleTo，然后两者变成合并后的一个泡泡（目标泡泡变成合并后个体，放大至原始1.2倍，且显示六合词）
+    async function animateAndMerge(bubbleFrom, bubbleTo, mergedText) {
+        return new Promise((resolve) => {
+            // 获取两者位置
+            const fromRect = getElementViewportRect(bubbleFrom);
+            const toRect = getElementViewportRect(bubbleTo);
+            
+            // 创建飞行克隆元素
+            const flyer = document.createElement('div');
+            flyer.className = 'flying-bubble';
+            // 复制背景样式和外形
+            const computedStyle = window.getComputedStyle(bubbleFrom);
+            const bgGradient = computedStyle.background;
+            flyer.style.background = bgGradient;
+            flyer.style.width = `${fromRect.width}px`;
+            flyer.style.height = `${fromRect.height}px`;
+            flyer.style.left = `${fromRect.left}px`;
+            flyer.style.top = `${fromRect.top}px`;
+            flyer.style.boxShadow = computedStyle.boxShadow;
+            flyer.style.borderRadius = '50%';
+            flyer.style.position = 'fixed';
+            flyer.style.opacity = '0.95';
+            document.body.appendChild(flyer);
+            
+            // 目标位置终点的中心偏移使得飞行终点完全覆盖目标
+            const targetWidth = toRect.width;
+            const targetHeight = toRect.height;
+            const endLeft = toRect.left + (toRect.width / 2) - (fromRect.width / 2);
+            const endTop = toRect.top + (toRect.height / 2) - (fromRect.height / 2);
+            
+            // 开启动画帧
+            requestAnimationFrame(() => {
+                flyer.style.transition = 'all 0.32s cubic-bezier(0.2, 0.85, 0.4, 1.1)';
+                flyer.style.left = `${endLeft}px`;
+                flyer.style.top = `${endTop}px`;
+                flyer.style.width = `${targetWidth}px`;
+                flyer.style.height = `${targetHeight}px`;
+                flyer.style.opacity = '0.9';
+            });
+            
+            // 动画结束后清除克隆体，合并两个泡泡
+            const onFinish = () => {
+                if (flyer && flyer.remove) flyer.remove();
+                // 正式合并: bubbleTo 变成合并后的泡泡 (放大至1.2倍 + 显示合文字)
+                if (!bubbleTo.classList.contains('merged') && !bubbleFrom.classList.contains('merged')) {
+                    // 设置合并状态，scale(1.2) 放大
+                    bubbleTo.classList.add('merged');
+                    bubbleTo.textContent = mergedText;
+                    bubbleTo.style.transform = 'scale(1.2)';
+                    bubbleTo.style.background = "radial-gradient(circle at 35% 35%, #FFD966, #E6A017)";
+                    bubbleTo.style.boxShadow = "0 18px 22px -6px rgba(200,120,30,0.5), inset 0 -6px 0 #aa6f2c, inset 0 3px 12px #ffeaac";
+                    bubbleTo.style.fontSize = '1.2rem';
+                    bubbleTo.style.whiteSpace = 'nowrap';
+                    bubbleTo.style.color = '#2c2c2c';
+                    
+                    // 让来源泡泡完全隐藏并禁用交互（保留占位保证网格结构稳定）
+                    if (bubbleFrom.parentNode) {
+                        bubbleFrom.style.visibility = 'hidden';
+                        bubbleFrom.style.pointerEvents = 'none';
+                        bubbleFrom.style.opacity = '0';
+                        bubbleFrom.style.transform = 'scale(0)';
+                        bubbleFrom.style.transition = 'all 0.1s';
+                    }
+                    // 增加合并计数
+                    mergedPairs++;
+                    updateMergeUI();
+                    // 清除当前选中引用（若选中的是这两个之一）
+                    if (currentSelected === bubbleFrom || currentSelected === bubbleTo) clearSelected();
+                    // 检查胜利
+                    checkAllMerged();
+                }
+                resolve();
+            };
+            
+            flyer.addEventListener('transitionend', onFinish, { once: true });
+            // 后备定时器
+            setTimeout(() => {
+                if (flyer && flyer.remove) {
+                    flyer.remove();
+                    if (!bubbleTo.classList.contains('merged')) {
+                        if (!bubbleTo.classList.contains('merged')) {
+                            bubbleTo.classList.add('merged');
+                            bubbleTo.textContent = mergedText;
+                            bubbleTo.style.transform = 'scale(1.2)';
+                            bubbleTo.style.background = "radial-gradient(circle at 35% 35%, #FFD966, #E6A017)";
+                            bubbleTo.style.boxShadow = "0 18px 22px -6px rgba(200,120,30,0.5), inset 0 -6px 0 #aa6f2c, inset 0 3px 12px #ffeaac";
+                            bubbleTo.style.color = '#2c2c2c';
+                            if (bubbleFrom.parentNode) bubbleFrom.style.visibility = 'hidden';
+                            mergedPairs++;
+                            updateMergeUI();
+                            if (currentSelected === bubbleFrom || currentSelected === bubbleTo) clearSelected();
+                            checkAllMerged();
+                        }
+                    }
+                    resolve();
+                }
+            }, 400);
+        });
+    }
+    
+    // 配对成功动画+合并流程
+    async function successMerge(firstBubble, secondBubble) {
+        if (animationLock) return false;
+        animationLock = true;
+        
+        // 确定合并后的六合文字
+        const wordA = firstBubble.dataset.word;
+        const wordB = secondBubble.dataset.word;
+        const key = wordA + wordB;
+        let mergeText = MERGED_NAME[key] || (wordA + wordB + '合');
+        if (!mergeText.includes('合')) mergeText = mergeText + '合';
+        
+        // 移除二者可能的高亮状态
+        if (firstBubble.classList.contains('selected')) {
+            firstBubble.classList.remove('selected');
+        }
+        if (secondBubble.classList.contains('selected')) {
+            secondBubble.classList.remove('selected');
+        }
+        clearSelected(); // 清空全局选中
+        
+        // 决定方向: 让 first 飞向 second (合并到 second 上)
+        await animateAndMerge(firstBubble, secondBubble, mergeText);
+        
+        animationLock = false;
+        return true;
+    }
+    
+    // 配对失败：仅恢复第一个泡泡的颜色并清选中
+    function failReset(firstBubble) {
+        if (firstBubble && !firstBubble.classList.contains('merged') && firstBubble.style.visibility !== 'hidden') {
+            if (firstBubble.classList.contains('selected')) {
+                firstBubble.classList.remove('selected');
+                const orig = firstBubble.dataset.originalBg;
+                if (orig) firstBubble.style.background = orig;
+                firstBubble.style.boxShadow = "0 20px 18px -10px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -12px 0 rgba(0, 0, 0, 0.15), inset 0 4px 10px rgba(255, 255, 245, 0.8)";
+            }
+        }
+        currentSelected = null;
+    }
+    
+    // 胜利检测
+    function checkAllMerged() {
+        if (mergedPairs === TOTAL_PAIRS && !gameCompleted) {
+            gameCompleted = true;
+            document.body.classList.add('game-completed');
+            victoryDiv.innerHTML = '<div class="success-overlay">🎉 恭喜你挑战成功！六合归元，时空共振 🎉</div>';
+            clearSelected();
+        } else if (mergedPairs !== TOTAL_PAIRS && victoryDiv.innerHTML !== '') {
+            victoryDiv.innerHTML = '';
+        }
+    }
+    
+    // 重置游戏
+    function resetGame() {
+        if (animationLock) return;
+        gameCompleted = false;
+        mergedPairs = 0;
+        updateMergeUI();
+        victoryDiv.innerHTML = '';
+        document.body.classList.remove('game-completed');
+        clearSelected();
+        currentSelected = null;
+        renderFreshBoard();
+        animationLock = false;
+    }
+    
+    // 洗牌
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+    
+    // 全新渲染 (按照词根动态分配颜色)
+    function renderFreshBoard() {
+        gridContainer.innerHTML = '';
+        let shuffledWords = shuffleArray([...RAW_WORDS]);
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < shuffledWords.length; i++) {
+            const word = shuffledWords[i];
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = word;
+            bubble.dataset.word = word;
+            bubble.dataset.matchTo = PAIR_MAP[word];
+            // 根据词汇获取专属色彩
+            const colorStyle = getColorForWord(word);
+            bubble.style.background = colorStyle;
+            bubble.dataset.originalBg = colorStyle;
+            bubble.style.color = '#3a3a3a';       // 深灰字体
+            bubble.style.boxShadow = "0 20px 18px -10px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 240, 180, 0.6), inset 0 -12px 0 rgba(0, 0, 0, 0.15), inset 0 4px 10px rgba(255, 255, 245, 0.8)";
+            fragment.appendChild(bubble);
+        }
+        gridContainer.appendChild(fragment);
+    }
+    
+    // 全局点击事件（委托）
+    async function onGridClick(e) {
+        if (animationLock || gameCompleted) return;
+        const target = e.target.closest('.bubble');
+        if (!target) return;
+        // 已合并或正在消失的不可点击
+        if (target.classList.contains('merged') || target.style.visibility === 'hidden' || target.style.opacity === '0') return;
+        
+        // 无选中任何泡泡
+        if (currentSelected === null) {
+            clearSelected();
+            target.classList.add('selected');
+            currentSelected = target;
+            return;
+        }
+        
+        // 同一个泡泡 -> 取消选中
+        if (currentSelected === target) {
+            clearSelected();
+            return;
+        }
+        
+        // 不同泡泡 验证配对
+        const first = currentSelected;
+        const second = target;
+        const isMatch = (first.dataset.matchTo === second.dataset.word);
+        
+        if (isMatch) {
+            // 配对正确，开始飞行合并动画
+            if (first.classList.contains('selected')) first.classList.remove('selected');
+            currentSelected = null;
+            await successMerge(first, second);
+        } else {
+            // 配对失败: 恢复第一个泡泡样式，不清除第二个
+            failReset(first);
+        }
+    }
+    
+    // 重置按钮事件
+    resetBtn.addEventListener('click', () => {
+        if (animationLock) return;
+        resetGame();
+    });
+    
+    // 初始化
+    function init() {
+        totalPairsSpan.innerText = TOTAL_PAIRS;
+        renderFreshBoard();
+        gridContainer.addEventListener('click', onGridClick);
+        mergedPairs = 0;
+        updateMergeUI();
+        gameCompleted = false;
+        currentSelected = null;
+        animationLock = false;
+        document.body.classList.remove('game-completed');
+        victoryDiv.innerHTML = '';
+    }
+    
+    init();
+</script>
+</body>
+</html>
