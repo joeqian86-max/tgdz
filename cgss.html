@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>时空能量 · 藏干十神记忆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #d9c9a7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', Roboto, '微软雅黑', sans-serif;
+            padding: 12px;
+        }
+
+        /* 容器宽度固定，最大宽度560px，圆角卡片 */
+        .game-container {
+            max-width: 560px;
+            width: 100%;
+            background: #fef7e9;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+            /* 不固定高度，但通过内部flex紧凑 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-padding {
+            padding: 16px 18px 22px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 标题区：一行显示，字体缩小 */
+        .title-wrapper {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .game-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e4b6e, #0e5a8a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        /* 手机窄屏下如果依然换行，允许稍微缩小 */
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 1rem;
+                white-space: normal;
+                word-break: keep-all;
+            }
+        }
+        .score-box {
+            background: #e6d5b3;
+            padding: 3px 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #5a3a1a;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* 日主区紧凑，字体小些 */
+        .day-master {
+            background: #efe2cc;
+            border-radius: 44px;
+            padding: 5px 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .day-label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #a1622a;
+            background: #fff2e0;
+            padding: 3px 10px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .day-label small {
+            font-size: 0.6rem;
+            font-weight: normal;
+        }
+        .master-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .master-btn {
+            background: #ecdbba;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: monospace;
+            color: #543a1f;
+        }
+        .master-btn.active {
+            background: #e07c2c;
+            color: white;
+        }
+
+        /* 地支区域 */
+        .question-area {
+            background: #f7eedb;
+            border-radius: 40px;
+            padding: 6px 10px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #4d321b;
+        }
+        .question-text span {
+            background: #ffeaaf;
+            padding: 2px 16px;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        /* 藏干网格 */
+        .section-title {
+            font-weight: bold;
+            color: #b16f34;
+            font-size: 0.75rem;
+            margin: 4px 0 6px 6px;
+        }
+        .cang-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .cang-btn {
+            background: #f2e5d2;
+            border: 1.5px solid #ddbc88;
+            padding: 6px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #4d351b;
+        }
+        .cang-btn.selected-correct {
+            background: #2c6e49;
+            border-color: #a3d9a5;
+            color: white;
+        }
+        .cang-btn.selected-wrong {
+            background: #bc4e2c;
+            border-color: #ffb48a;
+            color: white;
+            text-decoration: line-through;
+        }
+        .cang-btn.disabled-click {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* 十神区域：藏干名称与选项对比色 */
+        .shishen-wrapper {
+            background: #faf2e4;
+            border-radius: 32px;
+            padding: 8px 10px;
+            margin: 6px 0 8px;
+        }
+        .shishen-item {
+            background: #fff9ef;
+            margin-bottom: 8px;
+            border-radius: 50px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap; /* 强制一行 */
+            border: 1px solid #eeddbb;
+        }
+        /* 藏干名称：深色背景 + 白字，明显区分 */
+        .shishen-gan {
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: #b97f45;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            min-width: 52px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        /* 十神选项：四个强制一行，不换行，字体缩小 */
+        .shishen-options {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto; /* 极端宽度下允许横向滚动，但一般手机可容纳 */
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .shi-opt {
+            background: #e7d5b5;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #3d2a14;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 54px;
+            text-align: center;
+        }
+        .shi-opt.active-correct {
+            background: #2c6e49;
+            color: white;
+        }
+        .shi-opt.active-wrong {
+            background: #bc4e2c;
+            color: white;
+            text-decoration: line-through;
+        }
+
+        .feedback {
+            background: #ede1cd;
+            border-radius: 30px;
+            padding: 6px 10px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin: 6px 0 10px;
+            color: #785d38;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .next-btn, .learn-btn {
+            flex: 1;
+            border: none;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .next-btn {
+            background: #e09d3c;
+            color: white;
+            box-shadow: 0 2px 0 #8b561e;
+        }
+        .learn-btn {
+            background: #a57248;
+            color: #fff3e0;
+            box-shadow: 0 2px 0 #624a2a;
+        }
+        .next-btn:active, .learn-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #8b561e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* 弹窗样式略作适配 */
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: #fffef5;
+            width: 85%;
+            max-width: 340px;
+            border-radius: 48px;
+            padding: 16px;
+            text-align: center;
+        }
+        .modal-card h3 {
+            color: #c2722a;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        .score-final {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: #e9ddc3;
+            display: inline-block;
+            padding: 4px 20px;
+            border-radius: 60px;
+            margin: 8px 0;
+        }
+        .poster-img img {
+            width: 100%;
+            border-radius: 28px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-btn {
+            background: #e09d3c;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .modal-btn.secondary {
+            background: #89724c;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="game-padding">
+        <!-- 标题行 -->
+        <div class="title-wrapper">
+            <div class="game-title">📖《时空能量》课堂-藏干十神记忆</div>
+            <div class="score-box" id="scoreDisplay">🏆 0</div>
+        </div>
+
+        <!-- 日主区 -->
+        <div class="day-master">
+            <span class="day-label">🌞 日主 <small>(可点击切换)</small></span>
+            <div class="master-buttons" id="masterSelector"></div>
+        </div>
+
+        <!-- 地支 -->
+        <div class="question-area">
+            <div class="question-text">📍 地支 <span id="currentDizhi">寅</span></div>
+        </div>
+
+        <!-- 藏干区 -->
+        <div class="section-title">🌿 第一步 · 勾选全部正确藏干 (多选)</div>
+        <div id="cangGrid" class="cang-grid"></div>
+
+        <!-- 十神区 (隐藏) -->
+        <div id="shishenWrapper" class="hidden">
+            <div class="section-title">⚖️ 第二步 · 每个藏干选十神</div>
+            <div id="shishenArea" class="shishen-wrapper"></div>
+        </div>
+
+        <div id="feedback" class="feedback">✨ 勾选所有正确藏干（全部选对才会解锁十神） ✨</div>
+
+        <div class="action-buttons">
+            <button id="nextBtn" class="next-btn">🎲 下一题</button>
+            <button id="learnStopBtn" class="learn-btn">📖 先学到这</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= 命理核心数据 (与之前相同但保留所有逻辑) =======================
+    const DIZHI_STORE = {
+        "子": ["癸"], "丑": ["己", "癸", "辛"], "寅": ["甲", "丙", "戊"],
+        "卯": ["乙"], "辰": ["戊", "乙", "癸"], "巳": ["丙", "戊", "庚"],
+        "午": ["丁", "己"], "未": ["己", "丁", "乙"], "申": ["庚", "壬", "戊"],
+        "酉": ["辛"], "戌": ["戊", "辛", "丁"], "亥": ["壬", "甲"]
+    };
+    const ALL_DIZHI = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+    const YANG = ["甲","丙","戊","庚","壬"];
+    const WU_XING = { "甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水" };
+    const SHENG = { "木":"火", "火":"土", "土":"金", "金":"水", "水":"木" };
+    const KE = { "木":"土", "土":"水", "水":"火", "火":"金", "金":"木" };
+
+    function getTenGod(riGan, cangGan) {
+        if (riGan === cangGan) return "比肩";
+        const riYang = YANG.includes(riGan);
+        const cangYang = YANG.includes(cangGan);
+        const riWu = WU_XING[riGan];
+        const cangWu = WU_XING[cangGan];
+        if (riWu === cangWu) return riYang === cangYang ? "比肩" : "劫财";
+        if (KE[cangWu] === riWu) return riYang === cangYang ? "七杀" : "正官";
+        if (KE[riWu] === cangWu) return riYang === cangYang ? "偏财" : "正财";
+        if (SHENG[cangWu] === riWu) return riYang === cangYang ? "偏印" : "正印";
+        if (SHENG[riWu] === cangWu) return riYang === cangYang ? "食神" : "伤官";
+        return "正印";
+    }
+
+    let currentDay = "丙";
+    let currentDizhi = "寅";
+    let currentCorrectCangs = [];
+    let cangOptions = [];
+    let userSelectedCangs = new Set();
+    let userShiMap = {};
+    let stepLocked = false;
+    let isAnswered = false;
+    let score = 0;
+    let cachedShiOptions = new Map();
+
+    const masterSelector = document.getElementById("masterSelector");
+    const currentDizhiSpan = document.getElementById("currentDizhi");
+    const cangGridDiv = document.getElementById("cangGrid");
+    const shishenWrapper = document.getElementById("shishenWrapper");
+    const shishenAreaDiv = document.getElementById("shishenArea");
+    const feedbackDiv = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+    const learnStopBtn = document.getElementById("learnStopBtn");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+
+    function playSound(correct) {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = correct ? 800 : 450;
+            gain.gain.value = 0.12;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+            osc.stop(ctx.currentTime + 0.25);
+            ctx.resume();
+        } catch(e) {}
+    }
+
+    function generateCangOptions(correctArr) {
+        const allGan = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+        let incorrect = allGan.filter(g => !correctArr.includes(g));
+        for (let i = incorrect.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [incorrect[i], incorrect[j]] = [incorrect[j], incorrect[i]];
+        }
+        let need = 6 - correctArr.length;
+        if (need < 1) need = 2;
+        let dists = incorrect.slice(0, need);
+        let opts = [...correctArr.map(g => ({ gan: g, isCorrect: true })), ...dists.map(g => ({ gan: g, isCorrect: false }))];
+        for (let i = opts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [opts[i], opts[j]] = [opts[j], opts[i]];
+        }
+        return opts.slice(0, 6);
+    }
+
+    function resetForNewDizhi() {
+        currentCorrectCangs = DIZHI_STORE[currentDizhi] || [];
+        cangOptions = generateCangOptions(currentCorrectCangs);
+        userSelectedCangs.clear();
+        userShiMap = {};
+        currentCorrectCangs.forEach(g => { userShiMap[g] = null; });
+        stepLocked = false;
+        isAnswered = false;
+        cachedShiOptions.clear();
+        shishenWrapper.classList.add("hidden");
+        feedbackDiv.innerHTML = "✨ 勾选所有正确藏干（多选结束后自动判定） ✨";
+        feedbackDiv.style.background = "#ede1cd";
+        renderCangSection();
+        shishenAreaDiv.innerHTML = "";
+    }
+
+    function renderCangSection() {
+        cangGridDiv.innerHTML = "";
+        cangOptions.forEach(opt => {
+            const btn = document.createElement("div");
+            btn.className = "cang-btn";
+            btn.innerText = opt.gan;
+            if (userSelectedCangs.has(opt.gan)) {
+                if (opt.isCorrect) btn.classList.add("selected-correct");
+                else btn.classList.add("selected-wrong");
+            }
+            const disableClick = (stepLocked === true) || isAnswered;
+            if (!disableClick) {
+                btn.onclick = () => {
+                    if (stepLocked || isAnswered) return;
+                    if (userSelectedCangs.has(opt.gan)) userSelectedCangs.delete(opt.gan);
+                    else userSelectedCangs.add(opt.gan);
+                    renderCangSection();
+                    checkCangCompletionLazy();
+                };
+            } else {
+                btn.classList.add("disabled-click");
+            }
+            cangGridDiv.appendChild(btn);
+        });
+    }
+
+    function checkCangCompletionLazy() {
+        if (stepLocked || isAnswered) return;
+        const selectedArr = Array.from(userSelectedCangs);
+        const correctCount = currentCorrectCangs.length;
+        if (selectedArr.length < correctCount) {
+            feedbackDiv.innerHTML = `📌 还需选择 ${correctCount - selectedArr.length} 个正确藏干 (共${correctCount}个)`;
+            feedbackDiv.style.background = "#faeecb";
+            return;
+        }
+        const isMatch = (selectedArr.length === correctCount) && currentCorrectCangs.every(g => userSelectedCangs.has(g));
+        if (isMatch) {
+            stepLocked = true;
+            feedbackDiv.innerHTML = "✅ 藏干全对！现在为每个藏干选择十神 ✅";
+            feedbackDiv.style.background = "#ddecc7";
+            shishenWrapper.classList.remove("hidden");
+            renderShiSection();
+            playSound(true);
+            renderCangSection();
+        } else {
+            feedbackDiv.innerHTML = `❌ 藏干选择错误！正确藏干应为 [${currentCorrectCangs.join(', ')}]，请重新勾选 ❌`;
+            feedbackDiv.style.background = "#ffddcc";
+            playSound(false);
+            userSelectedCangs.clear();
+            renderCangSection();
+        }
+    }
+
+    function renderShiSection() {
+        shishenAreaDiv.innerHTML = "";
+        for (let gan of currentCorrectCangs) {
+            const correctShi = getTenGod(currentDay, gan);
+            let opts = cachedShiOptions.get(gan);
+            if (!opts) {
+                const allShi = ["正印","偏印","正官","七杀","正财","偏财","食神","伤官","比肩","劫财"];
+                let others = allShi.filter(s => s !== correctShi);
+                for (let i = others.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [others[i], others[j]] = [others[j], others[i]];
+                }
+                let tmp = [correctShi, others[0], others[1], others[2]];
+                for (let i = tmp.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [tmp[i], tmp[j]] = [tmp[j], tmp[i]];
+                }
+                opts = tmp;
+                cachedShiOptions.set(gan, opts);
+            }
+            const row = document.createElement("div");
+            row.className = "shishen-item";
+            const ganSpan = document.createElement("div");
+            ganSpan.className = "shishen-gan";
+            ganSpan.innerText = gan;
+            const optDiv = document.createElement("div");
+            optDiv.className = "shishen-options";
+            opts.forEach(shi => {
+                const btn = document.createElement("button");
+                btn.innerText = shi;
+                btn.className = "shi-opt";
+                if (userShiMap[gan] === shi) {
+                    if (shi === correctShi) btn.classList.add("active-correct");
+                    else btn.classList.add("active-wrong");
+                }
+                if (!isAnswered) {
+                    btn.onclick = () => {
+                        if (isAnswered) return;
+                        userShiMap[gan] = shi;
+                        renderShiSection();
+                        checkAllShiComplete();
+                    };
+                }
+                optDiv.appendChild(btn);
+            });
+            row.appendChild(ganSpan);
+            row.appendChild(optDiv);
+            shishenAreaDiv.appendChild(row);
+        }
+    }
+
+    function checkAllShiComplete() {
+        if (isAnswered) return;
+        const allSelected = currentCorrectCangs.every(gan => userShiMap[gan] !== null);
+        if (!allSelected) return;
+        let allCorrect = true;
+        for (let gan of currentCorrectCangs) {
+            if (getTenGod(currentDay, gan) !== userShiMap[gan]) {
+                allCorrect = false;
+                break;
+            }
+        }
+        let add = 0;
+        if (allCorrect) {
+            add = 1;
+            feedbackDiv.innerHTML = `🎉 完美！ ${currentDay}日主，地支${currentDizhi} → 藏干[${currentCorrectCangs.join('、')}] 十神全对！ +1分 🎉`;
+            feedbackDiv.style.background = "#c8e6c9";
+            playSound(true);
+        } else {
+            let errMsg = "";
+            for (let gan of currentCorrectCangs) {
+                const right = getTenGod(currentDay, gan);
+                if (userShiMap[gan] !== right) errMsg += `${gan}应为「${right}」; `;
+            }
+            feedbackDiv.innerHTML = `❌ 十神有误：${errMsg}<br> 正确组合: ${currentCorrectCangs.map(g=>`${g}→${getTenGod(currentDay,g)}`).join(' ; ')}`;
+            feedbackDiv.style.background = "#ffdbce";
+            playSound(false);
+        }
+        score += add;
+        scoreDisplay.innerText = `🏆 ${score}`;
+        isAnswered = true;
+        stepLocked = true;
+        renderCangSection();
+        renderShiSection();
+    }
+
+    function getBalancedRandomDizhi() {
+        return ALL_DIZHI[Math.floor(Math.random() * ALL_DIZHI.length)];
+    }
+
+    function nextQuestion() {
+        let newDizhi = getBalancedRandomDizhi();
+        currentDizhi = newDizhi;
+        currentDizhiSpan.innerText = currentDizhi;
+        resetForNewDizhi();
+    }
+
+    function initMasterSelector() {
+        const masters = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+        masters.forEach(m => {
+            const btn = document.createElement("button");
+            btn.innerText = m;
+            btn.classList.add("master-btn");
+            if (m === currentDay) btn.classList.add("active");
+            btn.onclick = () => {
+                if (isAnswered) return;
+                document.querySelectorAll(".master-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentDay = m;
+                cachedShiOptions.clear();
+                resetForNewDizhi();
+            };
+            masterSelector.appendChild(btn);
+        });
+    }
+
+    function showSettlement() {
+        if (document.querySelector(".modal-mask")) return;
+        const modal = document.createElement("div");
+        modal.className = "modal-mask";
+        modal.innerHTML = `
+            <div class="modal-card">
+                <h3>📊 本次修行结算</h3>
+                <div class="score-final">${score} 分</div>
+                <div style="margin:6px 0 0; font-size:0.7rem;">藏干·十神记忆进度</div>
+                <div class="poster-img">
+                    <img src="hb.jpg" alt="时空能量海报" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23f0e2c0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%238b5a2b\'%3E时空能量%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn" id="closeModalBtn">继续学习</button>
+                    <button class="modal-btn secondary" id="liuheBtn">🔗 地支六合</button>
+                    <button class="modal-btn secondary" id="liuchongBtn">⚡ 地支六冲</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById("closeModalBtn").onclick = () => modal.remove();
+        document.getElementById("liuheBtn").onclick = () => { window.location.href = "6h.html"; };
+        document.getElementById("liuchongBtn").onclick = () => { window.location.href = "6c.html"; };
+    }
+
+    function init() {
+        currentDizhi = getBalancedRandomDizhi();
+        currentDizhiSpan.innerText = currentDizhi;
+        initMasterSelector();
+        resetForNewDizhi();
+        nextBtn.onclick = () => nextQuestion();
+        learnStopBtn.onclick = () => showSettlement();
+    }
+    init();
+</script>
+</body>
+</html>
