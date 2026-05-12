@@ -12,6 +12,16 @@
             user-select: none;
         }
 
+        /* 基础 rem 基准，配合视口动态调整 */
+        html {
+            font-size: 16px;
+        }
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
         body {
             background: #d9c9a7;
             min-height: 100vh;
@@ -19,84 +29,77 @@
             justify-content: center;
             align-items: center;
             font-family: system-ui, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', Roboto, '微软雅黑', sans-serif;
-            padding: 12px;
+            padding: 0.75rem;
         }
 
-        /* 容器宽度固定，最大宽度560px，圆角卡片 */
+        /* 卡片容器，宽度自适应，最大宽限制 */
         .game-container {
-            max-width: 560px;
             width: 100%;
+            max-width: 560px;
             background: #fef7e9;
-            border-radius: 48px;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-            /* 不固定高度，但通过内部flex紧凑 */
+            border-radius: 3rem;
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .game-padding {
-            padding: 16px 18px 22px;
+            padding: 1rem 1.2rem 1.5rem;
             flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        /* 标题区：一行显示，字体缩小 */
+        /* 标题行：flex 换行但紧凑 */
         .title-wrapper {
-            text-align: center;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
         }
         .game-title {
-            font-size: 1.18rem;
+            font-size: 1.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #1e4b6e, #0e5a8a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            white-space: nowrap;
-            display: inline-block;
-        }
-        /* 手机窄屏下如果依然换行，允许稍微缩小 */
-        @media (max-width: 480px) {
-            .game-title {
-                font-size: 1rem;
-                white-space: normal;
-                word-break: keep-all;
-            }
+            white-space: normal;
+            word-break: keep-all;
+            line-height: 1.3;
         }
         .score-box {
             background: #e6d5b3;
-            padding: 3px 12px;
-            border-radius: 40px;
+            padding: 0.2rem 0.9rem;
+            border-radius: 2rem;
             font-weight: bold;
             font-size: 0.9rem;
             color: #5a3a1a;
-            display: inline-block;
-            margin-top: 4px;
+            white-space: nowrap;
         }
 
-        /* 日主区紧凑，字体小些 */
+        /* 日主区 */
         .day-master {
             background: #efe2cc;
-            border-radius: 44px;
-            padding: 5px 12px;
-            margin-bottom: 12px;
+            border-radius: 3rem;
+            padding: 0.4rem 0.8rem;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 6px;
             flex-wrap: wrap;
+            gap: 0.5rem;
         }
         .day-label {
             font-size: 0.7rem;
             font-weight: bold;
             color: #a1622a;
             background: #fff2e0;
-            padding: 3px 10px;
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
             white-space: nowrap;
         }
         .day-label small {
@@ -106,14 +109,14 @@
         .master-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 0.3rem;
         }
         .master-btn {
             background: #ecdbba;
             border: none;
-            width: 34px;
-            height: 34px;
-            border-radius: 30px;
+            width: 2.3rem;
+            height: 2.3rem;
+            border-radius: 2rem;
             font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
@@ -128,44 +131,44 @@
         /* 地支区域 */
         .question-area {
             background: #f7eedb;
-            border-radius: 40px;
-            padding: 6px 10px;
+            border-radius: 2.5rem;
+            padding: 0.5rem;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 0.8rem;
         }
         .question-text {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: #4d321b;
         }
         .question-text span {
             background: #ffeaaf;
-            padding: 2px 16px;
-            border-radius: 60px;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
             display: inline-block;
         }
 
-        /* 藏干网格 */
+        /* 藏干网格：响应式，每行最多6个 */
         .section-title {
             font-weight: bold;
             color: #b16f34;
-            font-size: 0.75rem;
-            margin: 4px 0 6px 6px;
+            font-size: 0.7rem;
+            margin: 0.3rem 0 0.4rem 0.3rem;
         }
         .cang-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
-            margin-bottom: 10px;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
         }
         .cang-btn {
             background: #f2e5d2;
             border: 1.5px solid #ddbc88;
-            padding: 6px 0;
+            padding: 0.4rem 0;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
-            border-radius: 40px;
+            border-radius: 2rem;
             cursor: pointer;
             color: #4d351b;
         }
@@ -185,42 +188,41 @@
             opacity: 0.7;
         }
 
-        /* 十神区域：藏干名称与选项对比色 */
+        /* 十神区域：藏干名 + 选项不换行 */
         .shishen-wrapper {
             background: #faf2e4;
-            border-radius: 32px;
-            padding: 8px 10px;
-            margin: 6px 0 8px;
+            border-radius: 2rem;
+            padding: 0.5rem;
+            margin: 0.4rem 0 0.6rem;
         }
         .shishen-item {
             background: #fff9ef;
-            margin-bottom: 8px;
-            border-radius: 50px;
-            padding: 6px 8px;
+            margin-bottom: 0.5rem;
+            border-radius: 3rem;
+            padding: 0.4rem 0.6rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: nowrap; /* 强制一行 */
+            gap: 0.5rem;
+            flex-wrap: nowrap;
             border: 1px solid #eeddbb;
         }
-        /* 藏干名称：深色背景 + 白字，明显区分 */
         .shishen-gan {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 800;
             background: #b97f45;
             color: white;
-            padding: 4px 12px;
-            border-radius: 40px;
-            min-width: 52px;
+            padding: 0.2rem 0.7rem;
+            border-radius: 2rem;
+            min-width: 3rem;
             text-align: center;
             flex-shrink: 0;
         }
-        /* 十神选项：四个强制一行，不换行，字体缩小 */
+        /* 十神选项强制一行，允许横向滚动（保证体验） */
         .shishen-options {
             display: flex;
-            gap: 6px;
+            gap: 0.4rem;
             flex-wrap: nowrap;
-            overflow-x: auto; /* 极端宽度下允许横向滚动，但一般手机可容纳 */
+            overflow-x: auto;
             flex: 1;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
@@ -228,15 +230,15 @@
         .shi-opt {
             background: #e7d5b5;
             border: none;
-            padding: 5px 8px;
-            border-radius: 40px;
+            padding: 0.3rem 0.6rem;
+            border-radius: 2rem;
             font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
             color: #3d2a14;
             white-space: nowrap;
             flex-shrink: 0;
-            min-width: 54px;
+            min-width: 3rem;
             text-align: center;
         }
         .shi-opt.active-correct {
@@ -251,27 +253,27 @@
 
         .feedback {
             background: #ede1cd;
-            border-radius: 30px;
-            padding: 6px 10px;
+            border-radius: 2rem;
+            padding: 0.4rem 0.6rem;
             text-align: center;
             font-size: 0.7rem;
             font-weight: 500;
-            margin: 6px 0 10px;
+            margin: 0.4rem 0 0.8rem;
             color: #785d38;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 0.7rem;
+            margin-top: 0.3rem;
         }
         .next-btn, .learn-btn {
             flex: 1;
             border: none;
-            padding: 8px 0;
+            padding: 0.6rem 0;
             font-size: 0.85rem;
             font-weight: bold;
-            border-radius: 50px;
+            border-radius: 3rem;
             cursor: pointer;
             text-align: center;
         }
@@ -286,7 +288,7 @@
             box-shadow: 0 2px 0 #624a2a;
         }
         .next-btn:active, .learn-btn:active {
-            transform: translateY(2px);
+            transform: translateY(1px);
             box-shadow: 0 1px 0 #8b561e;
         }
 
@@ -294,7 +296,7 @@
             display: none;
         }
 
-        /* 弹窗样式略作适配 */
+        /* 结算弹窗自适应 */
         .modal-mask {
             position: fixed;
             top: 0; left: 0;
@@ -310,39 +312,38 @@
             background: #fffef5;
             width: 85%;
             max-width: 340px;
-            border-radius: 48px;
-            padding: 16px;
+            border-radius: 3rem;
+            padding: 1rem;
             text-align: center;
         }
         .modal-card h3 {
             color: #c2722a;
             font-size: 1.2rem;
-            margin-bottom: 8px;
         }
         .score-final {
             font-size: 1.8rem;
             font-weight: bold;
             background: #e9ddc3;
             display: inline-block;
-            padding: 4px 20px;
-            border-radius: 60px;
-            margin: 8px 0;
+            padding: 0.2rem 1.2rem;
+            border-radius: 3rem;
+            margin: 0.5rem 0;
         }
         .poster-img img {
             width: 100%;
-            border-radius: 28px;
+            border-radius: 1.5rem;
         }
         .modal-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
             justify-content: center;
             flex-wrap: wrap;
         }
         .modal-btn {
             background: #e09d3c;
-            padding: 6px 14px;
-            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
             font-weight: bold;
             color: white;
             border: none;
@@ -352,33 +353,52 @@
         .modal-btn.secondary {
             background: #89724c;
         }
+
+        /* 防止极端窄屏破坏布局 */
+        @media (max-width: 420px) {
+            .game-padding {
+                padding: 0.8rem;
+            }
+            .cang-grid {
+                gap: 0.3rem;
+            }
+            .cang-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0;
+            }
+            .shishen-gan {
+                font-size: 0.9rem;
+                min-width: 2.6rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .shi-opt {
+                padding: 0.2rem 0.5rem;
+                font-size: 0.65rem;
+                min-width: 2.6rem;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="game-container">
     <div class="game-padding">
-        <!-- 标题行 -->
         <div class="title-wrapper">
             <div class="game-title">📖《时空能量》课堂-藏干十神记忆</div>
             <div class="score-box" id="scoreDisplay">🏆 0</div>
         </div>
 
-        <!-- 日主区 -->
         <div class="day-master">
             <span class="day-label">🌞 日主 <small>(可点击切换)</small></span>
             <div class="master-buttons" id="masterSelector"></div>
         </div>
 
-        <!-- 地支 -->
         <div class="question-area">
             <div class="question-text">📍 地支 <span id="currentDizhi">寅</span></div>
         </div>
 
-        <!-- 藏干区 -->
         <div class="section-title">🌿 第一步 · 勾选全部正确藏干 (多选)</div>
         <div id="cangGrid" class="cang-grid"></div>
 
-        <!-- 十神区 (隐藏) -->
         <div id="shishenWrapper" class="hidden">
             <div class="section-title">⚖️ 第二步 · 每个藏干选十神</div>
             <div id="shishenArea" class="shishen-wrapper"></div>
@@ -394,7 +414,7 @@
 </div>
 
 <script>
-    // ======================= 命理核心数据 (与之前相同但保留所有逻辑) =======================
+    // ======================= 命理核心数据 =======================
     const DIZHI_STORE = {
         "子": ["癸"], "丑": ["己", "癸", "辛"], "寅": ["甲", "丙", "戊"],
         "卯": ["乙"], "辰": ["戊", "乙", "癸"], "巳": ["丙", "戊", "庚"],
