@@ -24,7 +24,7 @@
 
         .game-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             background: rgba(255, 245, 220, 0.88);
             backdrop-filter: blur(8px);
             border-radius: 56px;
@@ -33,10 +33,9 @@
             padding: 16px 14px 20px;
         }
 
-        /* 标题 - 无符号 */
         .game-title {
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, #0a4b8a, #1e6faf);
             background-clip: text;
@@ -46,7 +45,6 @@
             margin: 0 0 12px 0;
         }
 
-        /* 按钮行 - 无emoji */
         .buttons-row {
             display: flex;
             justify-content: center;
@@ -83,7 +81,6 @@
             box-shadow: 0 3px 0 #3c6e8f;
         }
 
-        /* 第三行 */
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -127,14 +124,14 @@
         }
         .sound-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #4a2a18; }
 
-        /* 卡片网格 - 缩小30% */
+        /* 5x5 网格，卡片进一步缩小 */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px 8px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px 6px;
             background: #ecd9b4;
-            border-radius: 48px;
-            padding: 12px 10px;
+            border-radius: 36px;
+            padding: 10px 8px;
             margin-bottom: 16px;
             box-shadow: inset 0 0 0 3px #fff6e5, inset 0 0 0 8px #e2c294, 0 8px 16px rgba(0,0,0,0.1);
         }
@@ -142,12 +139,12 @@
         .card {
             aspect-ratio: 4 / 5;
             background: #fff9ef;
-            border-radius: 16px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
             transition: all 0.08s linear;
             cursor: pointer;
             transform: translateY(-2px);
@@ -156,14 +153,15 @@
             transform: translateY(3px);
             box-shadow: 0 2px 0 rgba(0,0,0,0.15);
         }
+        /* 字体放大至卡片高度的70%左右，天干略大 */
         .card.tiangan {
-            font-size: 1.3rem;   /* 缩小30% */
-            border-bottom: 4px solid #3b82f6;
+            font-size: 1.6rem;
+            border-bottom: 3px solid #3b82f6;
             border-right: 1px solid #3b82f6;
         }
         .card.dizhi {
-            font-size: 1.0rem;   /* 缩小30% */
-            border-bottom: 4px solid #2ecc71;
+            font-size: 1.3rem;
+            border-bottom: 3px solid #2ecc71;
             border-right: 1px solid #2ecc71;
         }
         .card[data-wuxing="木"] { color: #2e7d32; text-shadow: 0 1px 0 #c8e6c9; }
@@ -172,18 +170,16 @@
         .card[data-wuxing="金"] { color: #bf8f00; text-shadow: 0 1px 0 #fff9c4; }
         .card[data-wuxing="水"] { color: #0277bd; text-shadow: 0 1px 0 #b3e5fc; }
 
-        /* 提示高亮 */
         .hint-highlight {
             animation: hintBlink 0.8s ease-in-out 3;
-            box-shadow: 0 0 0 3px gold, 0 5px 0 rgba(0,0,0,0.15);
+            box-shadow: 0 0 0 3px gold, 0 4px 0 rgba(0,0,0,0.15);
         }
         @keyframes hintBlink {
-            0% { box-shadow: 0 0 0 2px gold, 0 5px 0 rgba(0,0,0,0.15); }
-            50% { box-shadow: 0 0 0 6px #ffb347, 0 5px 0 rgba(0,0,0,0.15); }
-            100% { box-shadow: 0 0 0 2px gold, 0 5px 0 rgba(0,0,0,0.15); }
+            0% { box-shadow: 0 0 0 2px gold, 0 4px 0 rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 0 0 6px #ffb347, 0 4px 0 rgba(0,0,0,0.15); }
+            100% { box-shadow: 0 0 0 2px gold, 0 4px 0 rgba(0,0,0,0.15); }
         }
 
-        /* 底部独立按钮 */
         .bottom-btn {
             display: flex;
             justify-content: center;
@@ -224,60 +220,75 @@
             100% { transform: translateX(0px) translateY(-2px);}
         }
 
-        /* 浮层 */
+        /* 浮层 - 结算含海报 */
         .modal-mask {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            padding: 20px;
         }
         .modal-panel {
-            background: #fff2e0;
+            background: #fff9ef;
             border-radius: 48px;
-            width: 80%;
-            max-width: 320px;
-            padding: 24px 20px;
+            width: 90%;
+            max-width: 380px;
             text-align: center;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.4);
+            overflow: hidden;
+            padding-bottom: 24px;
         }
-        .level-options {
+        .poster-img {
+            width: 100%;
+            display: block;
+            background: #f3d9a4;
+        }
+        .poster-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+        .score-final {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d46b1e;
+            margin: 16px 0 8px;
+        }
+        .other-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
             justify-content: center;
-            margin: 20px 0;
-        }
-        .level-opt {
-            background: #fbc97f;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 60px;
-            font-weight: bold;
-            font-size: 1rem;
-            width: 110px;
-        }
-        .close-modal {
-            background: #a5662e;
-            color: white;
-            margin-top: 10px;
-            padding: 6px 20px;
-            border-radius: 40px;
-            border: none;
+            gap: 12px;
+            margin: 16px 20px;
         }
         .other-game-btn {
             background: #6f9e3f;
             color: white;
             border: none;
-            margin: 8px 6px;
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 40px;
             font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 0 #3e5e22;
+            cursor: pointer;
         }
+        .close-modal {
+            background: #a5662e;
+            color: white;
+            margin-top: 8px;
+            padding: 8px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         .merge-toast {
             position: fixed;
             top: 40%;
@@ -375,7 +386,7 @@
     let visibleCards = [];
     let nextCardId = 1;
     let waitForMerge = false;
-    const GRID_SIZE = 16;
+    const GRID_SIZE = 25;   // 5x5
 
     function shuffleArray(arr) {
         for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
@@ -388,43 +399,41 @@
         return { id: nextCardId++, text, type, wuxing: wuxingMap[text] || '土' };
     }
 
-    // 牌堆生成（第六关牌量增加3倍）
     function generateDeckForLevel(level) {
         const tgChars = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
         const dzChars = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
         let deck = [];
         if(level === 1) {
-            for(let i=0;i<2;i++) tgChars.forEach(c => deck.push(createCardItem(c)));
+            for(let i=0;i<3;i++) tgChars.forEach(c => deck.push(createCardItem(c))); // 30张
         } 
         else if(level === 2) {
-            for(let i=0;i<2;i++) {
+            for(let i=0;i<3;i++) {
                 for(let [a,b] of diZhiLiuHe) {
                     deck.push(createCardItem(a));
                     deck.push(createCardItem(b));
                 }
-            }
+            } // 36张
         }
         else if(level === 3) {
             let need = ['寅','丑','午','亥','卯','申'];
-            for(let i=0;i<3;i++) need.forEach(c => deck.push(createCardItem(c)));
+            for(let i=0;i<5;i++) need.forEach(c => deck.push(createCardItem(c))); // 30张
         }
         else if(level === 4) {
             let items = ['壬','午','癸','巳','己','亥','丁','亥','戊','子','辛','巳'];
-            items.forEach(c => deck.push(createCardItem(c)));
-            deck = deck.concat(deck.slice(0,4));
+            for(let i=0;i<3;i++) items.forEach(c => deck.push(createCardItem(c))); // 36张
         }
         else if(level === 5) {
             for(let g of sanHeGroups) {
-                for(let i=0;i<2;i++) {
+                for(let i=0;i<3;i++) {
                     for(let ch of g) deck.push(createCardItem(ch));
                 }
-            }
+            } // 36张
         }
         else if(level === 6) {
             let allChars = [...tgChars, ...dzChars, '寅','丑','午','亥','卯','申','壬','午','癸','巳','己','亥','丁','戊','子','辛','戌','酉','辰'];
             allChars = [...new Set(allChars)];
-            // 牌量增加3倍：原约32张，现约96~100张
-            for(let loop=0; loop<9; loop++) {   // 3倍于之前（原本3循环，现在9循环）
+            // 牌量增加3倍 ≈ 96张
+            for(let loop=0; loop<9; loop++) {
                 for(let ch of allChars) deck.push(createCardItem(ch));
             }
             deck = shuffleArray(deck).slice(0, 96);
@@ -580,20 +589,19 @@
         }
     }
 
-    // 胜利音效
     function playVictorySound() {
+        if(!soundEnabled) return;
         try {
             let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            osc.frequency.value = 1046.5; // C6
+            osc.frequency.value = 1046.5;
             gain.gain.value = 0.2;
             osc.start();
             gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime+0.8);
             osc.stop(audioCtx.currentTime+0.8);
-            // 第二个音符
             setTimeout(() => {
                 let osc2 = audioCtx.createOscillator();
                 let gain2 = audioCtx.createGain();
@@ -611,15 +619,17 @@
     function checkLevelComplete() {
         if(allCardsData.length===0 && visibleCards.length===0) {
             if(currentLevel < 6) {
-                if(soundEnabled) playVictorySound();
+                playVictorySound();
                 showToast(`🎉 第${currentLevel}关通关！进入下一关 🎉`, 2000);
                 currentLevel++;
                 totalScore += 50;
                 updateScoreUI();
                 initLevel(currentLevel);
             } else {
-                if(soundEnabled) playVictorySound();
+                playVictorySound();
                 showToast(`🏆 完美通关！总分${totalScore} 🏆`, 3000);
+                // 通关完成也展示结算海报
+                setTimeout(() => showEndModalWithPoster(totalScore), 1500);
             }
         }
     }
@@ -691,6 +701,7 @@
     }
 
     function beep(success) {
+        if(!soundEnabled) return;
         try {
             let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let osc = audioCtx.createOscillator();
@@ -713,32 +724,42 @@
         setTimeout(()=>toast.remove(), duration);
     }
 
-    function endGameAndShowScore() {
+    // 结算海报弹窗 (带hb.jpg图片)
+    function showEndModalWithPoster(score) {
         let modal = document.createElement('div');
         modal.className = 'modal-mask';
+        // 图片路径：请将 hb.jpg 放在项目根目录，或者替换为实际网络地址
+        // 这里使用示意路径，您可改为实际图片URL
+        const posterSrc = "hb.jpg";   // 请替换为您的海报图片地址，支持相对路径或https
         modal.innerHTML = `
             <div class="modal-panel">
-                <h3>游戏结束</h3>
-                <p style="font-size:1.8rem; margin:10px 0; font-weight:bold;">${totalScore} 分</p>
-                <div style="margin: 15px 0;">
-                    <button class="other-game-btn" id="extraLiuHe">掌决六合</button>
-                    <button class="other-game-btn" id="extraLiuChong">掌决六冲</button>
-                    <button class="other-game-btn" id="extraCangGan">地支藏干</button>
+                <div class="poster-img">
+                    <img src="${posterSrc}" alt="通关海报" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=HB+Poster';">
+                </div>
+                <div class="score-final">${score} 分</div>
+                <div class="other-buttons">
+                    <button class="other-game-btn" id="modalLiuHe">掌决六合</button>
+                    <button class="other-game-btn" id="modalLiuChong">掌决六冲</button>
+                    <button class="other-game-btn" id="modalCangGan">地支藏干</button>
                 </div>
                 <button class="close-modal" id="closeEndModal">关闭</button>
             </div>
         `;
         document.body.appendChild(modal);
         document.getElementById('closeEndModal').onclick = () => modal.remove();
-        document.getElementById('extraLiuHe').onclick = () => alert('六合：子丑、寅亥、卯戌、辰酉、巳申、午未');
-        document.getElementById('extraLiuChong').onclick = () => alert('六冲：子午、丑未、寅申、卯酉、辰戌、巳亥');
-        document.getElementById('extraCangGan').onclick = () => alert('地支藏干：子藏癸、丑藏己癸辛、寅藏甲丙戊、卯藏乙、辰藏戊乙癸、巳藏丙戊庚、午藏丁己、未藏己丁乙、申藏庚壬戊、酉藏辛、戌藏戊辛丁、亥藏壬甲');
+        document.getElementById('modalLiuHe').onclick = () => alert('六合：子丑、寅亥、卯戌、辰酉、巳申、午未');
+        document.getElementById('modalLiuChong').onclick = () => alert('六冲：子午、丑未、寅申、卯酉、辰戌、巳亥');
+        document.getElementById('modalCangGan').onclick = () => alert('地支藏干：子藏癸、丑藏己癸辛、寅藏甲丙戊、卯藏乙、辰藏戊乙癸、巳藏丙戊庚、午藏丁己、未藏己丁乙、申藏庚壬戊、酉藏辛、戌藏戊辛丁、亥藏壬甲');
+    }
+
+    function endGameAndShowScore() {
+        showEndModalWithPoster(totalScore);
     }
 
     function showLevelModal() {
         let modal = document.createElement('div');
         modal.className = 'modal-mask';
-        let levelsHtml = `<div class="modal-panel"><h3>选择关卡</h3><div class="level-options">`;
+        let levelsHtml = `<div class="modal-panel" style="background:#fff2e0;"><h3>选择关卡</h3><div class="level-options">`;
         for(let i=1;i<=6;i++) {
             levelsHtml += `<button class="level-opt" data-level="${i}">${i}关 · ${levelRules[i].name}</button>`;
         }
