@@ -124,7 +124,6 @@
         }
         .sound-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #4a2a18; }
 
-        /* 5x5 网格，卡片进一步缩小 */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -138,7 +137,6 @@
 
         .card {
             aspect-ratio: 4 / 5;
-            background: #fff9ef;
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -153,13 +151,16 @@
             transform: translateY(3px);
             box-shadow: 0 2px 0 rgba(0,0,0,0.15);
         }
-        /* 字体放大至卡片高度的70%左右，天干略大 */
+        /* 天干 - 更淡的淡紫色，与地支区分 */
         .card.tiangan {
+            background: #faf5ff;      /* 极浅淡紫色 */
             font-size: 1.6rem;
             border-bottom: 3px solid #3b82f6;
             border-right: 1px solid #3b82f6;
         }
+        /* 地支 - 原有米色背景 */
         .card.dizhi {
+            background: #fff9ef;
             font-size: 1.3rem;
             border-bottom: 3px solid #2ecc71;
             border-right: 1px solid #2ecc71;
@@ -201,7 +202,6 @@
             box-shadow: 0 1px 0 #6e3a18;
         }
 
-        /* 动画 */
         .shake-anim {
             animation: shakeCard 0.2s ease-in-out 0s 2;
         }
@@ -220,7 +220,6 @@
             100% { transform: translateX(0px) translateY(-2px);}
         }
 
-        /* 浮层 - 结算含海报 */
         .modal-mask {
             position: fixed;
             top: 0; left: 0;
@@ -386,7 +385,7 @@
     let visibleCards = [];
     let nextCardId = 1;
     let waitForMerge = false;
-    const GRID_SIZE = 25;   // 5x5
+    const GRID_SIZE = 25;
 
     function shuffleArray(arr) {
         for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
@@ -404,7 +403,7 @@
         const dzChars = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
         let deck = [];
         if(level === 1) {
-            for(let i=0;i<3;i++) tgChars.forEach(c => deck.push(createCardItem(c))); // 30张
+            for(let i=0;i<3;i++) tgChars.forEach(c => deck.push(createCardItem(c)));
         } 
         else if(level === 2) {
             for(let i=0;i<3;i++) {
@@ -412,27 +411,26 @@
                     deck.push(createCardItem(a));
                     deck.push(createCardItem(b));
                 }
-            } // 36张
+            }
         }
         else if(level === 3) {
             let need = ['寅','丑','午','亥','卯','申'];
-            for(let i=0;i<5;i++) need.forEach(c => deck.push(createCardItem(c))); // 30张
+            for(let i=0;i<5;i++) need.forEach(c => deck.push(createCardItem(c)));
         }
         else if(level === 4) {
             let items = ['壬','午','癸','巳','己','亥','丁','亥','戊','子','辛','巳'];
-            for(let i=0;i<3;i++) items.forEach(c => deck.push(createCardItem(c))); // 36张
+            for(let i=0;i<3;i++) items.forEach(c => deck.push(createCardItem(c)));
         }
         else if(level === 5) {
             for(let g of sanHeGroups) {
                 for(let i=0;i<3;i++) {
                     for(let ch of g) deck.push(createCardItem(ch));
                 }
-            } // 36张
+            }
         }
         else if(level === 6) {
             let allChars = [...tgChars, ...dzChars, '寅','丑','午','亥','卯','申','壬','午','癸','巳','己','亥','丁','戊','子','辛','戌','酉','辰'];
             allChars = [...new Set(allChars)];
-            // 牌量增加3倍 ≈ 96张
             for(let loop=0; loop<9; loop++) {
                 for(let ch of allChars) deck.push(createCardItem(ch));
             }
@@ -628,7 +626,6 @@
             } else {
                 playVictorySound();
                 showToast(`🏆 完美通关！总分${totalScore} 🏆`, 3000);
-                // 通关完成也展示结算海报
                 setTimeout(() => showEndModalWithPoster(totalScore), 1500);
             }
         }
@@ -724,13 +721,10 @@
         setTimeout(()=>toast.remove(), duration);
     }
 
-    // 结算海报弹窗 (带hb.jpg图片)
     function showEndModalWithPoster(score) {
         let modal = document.createElement('div');
         modal.className = 'modal-mask';
-        // 图片路径：请将 hb.jpg 放在项目根目录，或者替换为实际网络地址
-        // 这里使用示意路径，您可改为实际图片URL
-        const posterSrc = "hb.jpg";   // 请替换为您的海报图片地址，支持相对路径或https
+        const posterSrc = "hb.jpg";   // 请替换为您的海报图片地址
         modal.innerHTML = `
             <div class="modal-panel">
                 <div class="poster-img">
