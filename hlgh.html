@@ -33,6 +33,7 @@
             padding: 16px 14px 20px;
         }
 
+        /* 标题 - 无符号 */
         .game-title {
             text-align: center;
             font-size: 1.6rem;
@@ -45,10 +46,11 @@
             margin: 0 0 12px 0;
         }
 
+        /* 按钮行 - 无emoji */
         .buttons-row {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
@@ -57,13 +59,14 @@
             border: none;
             font-size: 0.8rem;
             font-weight: bold;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 40px;
             color: #2c2b26;
             box-shadow: 0 3px 0 #a45d2e;
             cursor: pointer;
             font-family: inherit;
             transition: 0.05s linear;
+            white-space: nowrap;
         }
         .ctrl-btn:active {
             transform: translateY(2px);
@@ -80,6 +83,7 @@
             box-shadow: 0 3px 0 #3c6e8f;
         }
 
+        /* 第三行 */
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -123,13 +127,14 @@
         }
         .sound-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #4a2a18; }
 
+        /* 卡片网格 - 缩小30% */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px 10px;
+            gap: 8px 8px;
             background: #ecd9b4;
             border-radius: 48px;
-            padding: 18px 12px;
+            padding: 12px 10px;
             margin-bottom: 16px;
             box-shadow: inset 0 0 0 3px #fff6e5, inset 0 0 0 8px #e2c294, 0 8px 16px rgba(0,0,0,0.1);
         }
@@ -137,29 +142,29 @@
         .card {
             aspect-ratio: 4 / 5;
             background: #fff9ef;
-            border-radius: 20px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
             transition: all 0.08s linear;
             cursor: pointer;
             transform: translateY(-2px);
         }
         .card:active {
-            transform: translateY(4px);
-            box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.15);
         }
         .card.tiangan {
-            font-size: 1.8rem;
-            border-bottom: 5px solid #3b82f6;
-            border-right: 2px solid #3b82f6;
+            font-size: 1.3rem;   /* 缩小30% */
+            border-bottom: 4px solid #3b82f6;
+            border-right: 1px solid #3b82f6;
         }
         .card.dizhi {
-            font-size: 1.4rem;
-            border-bottom: 5px solid #2ecc71;
-            border-right: 2px solid #2ecc71;
+            font-size: 1.0rem;   /* 缩小30% */
+            border-bottom: 4px solid #2ecc71;
+            border-right: 1px solid #2ecc71;
         }
         .card[data-wuxing="木"] { color: #2e7d32; text-shadow: 0 1px 0 #c8e6c9; }
         .card[data-wuxing="火"] { color: #e65100; text-shadow: 0 1px 0 #ffccbc; }
@@ -167,38 +172,40 @@
         .card[data-wuxing="金"] { color: #bf8f00; text-shadow: 0 1px 0 #fff9c4; }
         .card[data-wuxing="水"] { color: #0277bd; text-shadow: 0 1px 0 #b3e5fc; }
 
+        /* 提示高亮 */
         .hint-highlight {
             animation: hintBlink 0.8s ease-in-out 3;
-            box-shadow: 0 0 0 3px gold, 0 7px 0 rgba(0,0,0,0.15);
+            box-shadow: 0 0 0 3px gold, 0 5px 0 rgba(0,0,0,0.15);
         }
         @keyframes hintBlink {
-            0% { box-shadow: 0 0 0 2px gold, 0 7px 0 rgba(0,0,0,0.15); }
-            50% { box-shadow: 0 0 0 6px #ffb347, 0 7px 0 rgba(0,0,0,0.15); }
-            100% { box-shadow: 0 0 0 2px gold, 0 7px 0 rgba(0,0,0,0.15); }
+            0% { box-shadow: 0 0 0 2px gold, 0 5px 0 rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 0 0 6px #ffb347, 0 5px 0 rgba(0,0,0,0.15); }
+            100% { box-shadow: 0 0 0 2px gold, 0 5px 0 rgba(0,0,0,0.15); }
         }
 
-        .bottom-bar {
+        /* 底部独立按钮 */
+        .bottom-btn {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #e4c48b;
-            border-radius: 60px;
-            padding: 6px 16px;
+            justify-content: center;
             margin-top: 8px;
-        }
-        .stack-info {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #2d2b26;
         }
         .end-btn {
             background: #b95f2e;
             color: white;
             box-shadow: 0 2px 0 #6e3a18;
-            padding: 5px 20px;
-            font-size: 0.85rem;
+            padding: 6px 24px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .end-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #6e3a18;
         }
 
+        /* 动画 */
         .shake-anim {
             animation: shakeCard 0.2s ease-in-out 0s 2;
         }
@@ -217,6 +224,7 @@
             100% { transform: translateX(0px) translateY(-2px);}
         }
 
+        /* 浮层 */
         .modal-mask {
             position: fixed;
             top: 0; left: 0;
@@ -296,28 +304,27 @@
 </head>
 <body>
 <div class="game-container">
-    <div class="game-title">⚡时空能量课堂·合了个合✨</div>
+    <div class="game-title">时空能量课堂-合了个合</div>
 
     <div class="buttons-row">
-        <button class="ctrl-btn" id="shuffleBtn">🃏 打乱</button>
-        <button class="ctrl-btn" id="restartBtn">🔄 重开</button>
-        <button class="ctrl-btn hint-btn" id="hintBtn">💡 提示</button>
-        <button class="ctrl-btn level-select-btn" id="openLevelBtn">📚 选择关卡</button>
+        <button class="ctrl-btn" id="shuffleBtn">打乱</button>
+        <button class="ctrl-btn" id="restartBtn">重开</button>
+        <button class="ctrl-btn hint-btn" id="hintBtn">提示</button>
+        <button class="ctrl-btn level-select-btn" id="openLevelBtn">选关卡</button>
     </div>
 
     <div class="info-row">
         <div class="left-info">
             <div class="level-name" id="levelNameDisplay">第一关 · 天干五合</div>
-            <div class="score-box">🎯 <span id="scoreValue">0</span></div>
+            <div class="score-box">得分 <span id="scoreValue">0</span></div>
         </div>
-        <button class="sound-btn" id="soundToggleBtn">🔊 音效开</button>
+        <button class="sound-btn" id="soundToggleBtn">音效开</button>
     </div>
 
     <div class="cards-grid" id="cardsGrid"></div>
 
-    <div class="bottom-bar">
-        <div class="stack-info" id="stackInfo">📦 牌堆剩余: 0 张</div>
-        <button class="ctrl-btn end-btn" id="endGameBtn">🏁 先合到这</button>
+    <div class="bottom-btn">
+        <button class="end-btn" id="endGameBtn">先合到这，游戏结束</button>
     </div>
 </div>
 
@@ -381,7 +388,7 @@
         return { id: nextCardId++, text, type, wuxing: wuxingMap[text] || '土' };
     }
 
-    // 修复第二关和第五关牌堆数量，保证完全配对无单张残留
+    // 牌堆生成（第六关牌量增加3倍）
     function generateDeckForLevel(level) {
         const tgChars = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
         const dzChars = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -390,7 +397,6 @@
             for(let i=0;i<2;i++) tgChars.forEach(c => deck.push(createCardItem(c)));
         } 
         else if(level === 2) {
-            // 地支六合共6对，让每对出现2次，总牌数24张，完全可配对
             for(let i=0;i<2;i++) {
                 for(let [a,b] of diZhiLiuHe) {
                     deck.push(createCardItem(a));
@@ -408,7 +414,6 @@
             deck = deck.concat(deck.slice(0,4));
         }
         else if(level === 5) {
-            // 三合：每组三个字，让每组每个字出现2次，共4组*3*2=24张，完全可三合配对
             for(let g of sanHeGroups) {
                 for(let i=0;i<2;i++) {
                     for(let ch of g) deck.push(createCardItem(ch));
@@ -418,10 +423,11 @@
         else if(level === 6) {
             let allChars = [...tgChars, ...dzChars, '寅','丑','午','亥','卯','申','壬','午','癸','巳','己','亥','丁','戊','子','辛','戌','酉','辰'];
             allChars = [...new Set(allChars)];
-            for(let i=0;i<3;i++) {
+            // 牌量增加3倍：原约32张，现约96~100张
+            for(let loop=0; loop<9; loop++) {   // 3倍于之前（原本3循环，现在9循环）
                 for(let ch of allChars) deck.push(createCardItem(ch));
             }
-            deck = shuffleArray(deck).slice(0, 32);
+            deck = shuffleArray(deck).slice(0, 96);
         }
         deck = deck.filter(c => c && c.text && typeof c.text === 'string');
         while(deck.length < GRID_SIZE) deck = deck.concat(deck.slice(0, GRID_SIZE - deck.length));
@@ -433,11 +439,9 @@
             visibleCards.push(allCardsData.shift());
         }
         renderCards();
-        updateStackInfo();
     }
 
     function updateScoreUI() { document.getElementById('scoreValue').innerText = totalScore; }
-    function updateStackInfo() { document.getElementById('stackInfo').innerHTML = `📦 牌堆剩余: ${allCardsData.length} 张`; }
     function updateLevelName() {
         document.getElementById('levelNameDisplay').innerText = `第${currentLevel}关 · ${levelRules[currentLevel].name}`;
     }
@@ -576,15 +580,45 @@
         }
     }
 
+    // 胜利音效
+    function playVictorySound() {
+        try {
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 1046.5; // C6
+            gain.gain.value = 0.2;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime+0.8);
+            osc.stop(audioCtx.currentTime+0.8);
+            // 第二个音符
+            setTimeout(() => {
+                let osc2 = audioCtx.createOscillator();
+                let gain2 = audioCtx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.frequency.value = 1318.52;
+                gain2.gain.value = 0.2;
+                osc2.start();
+                gain2.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime+0.6);
+                osc2.stop(audioCtx.currentTime+0.6);
+            }, 200);
+        } catch(e) {}
+    }
+
     function checkLevelComplete() {
         if(allCardsData.length===0 && visibleCards.length===0) {
             if(currentLevel < 6) {
+                if(soundEnabled) playVictorySound();
                 showToast(`🎉 第${currentLevel}关通关！进入下一关 🎉`, 2000);
                 currentLevel++;
                 totalScore += 50;
                 updateScoreUI();
                 initLevel(currentLevel);
             } else {
+                if(soundEnabled) playVictorySound();
                 showToast(`🏆 完美通关！总分${totalScore} 🏆`, 3000);
             }
         }
@@ -602,7 +636,6 @@
         let need = Math.min(GRID_SIZE, allCardsData.length);
         for(let i=0;i<need;i++) visibleCards.push(allCardsData.shift());
         renderCards();
-        updateStackInfo();
     }
 
     function restartLevel() {
@@ -617,7 +650,7 @@
         renderCards();
         selectedCards = [];
         clearSelectedStyle();
-        showToast('🃏 牌序已打乱', 800);
+        showToast('牌序已打乱', 800);
     }
 
     function hintAction() {
@@ -650,9 +683,9 @@
                 if(dom) dom.classList.add('hint-highlight');
                 setTimeout(() => dom?.classList.remove('hint-highlight'), 2000);
             });
-            showToast('💡 高亮处可合成', 1500);
+            showToast('高亮处可合成', 1500);
         } else {
-            showToast('⚠️ 已全部合成，重新开局', 1800);
+            showToast('已全部合成，重新开局', 1800);
             setTimeout(() => restartLevel(), 1800);
         }
     }
@@ -685,27 +718,27 @@
         modal.className = 'modal-mask';
         modal.innerHTML = `
             <div class="modal-panel">
-                <h3>✨ 游戏结束 ✨</h3>
+                <h3>游戏结束</h3>
                 <p style="font-size:1.8rem; margin:10px 0; font-weight:bold;">${totalScore} 分</p>
                 <div style="margin: 15px 0;">
-                    <button class="other-game-btn" id="extraLiuHe">📜 掌决六合</button>
-                    <button class="other-game-btn" id="extraLiuChong">⚡ 掌决六冲</button>
-                    <button class="other-game-btn" id="extraCangGan">🌿 地支藏干</button>
+                    <button class="other-game-btn" id="extraLiuHe">掌决六合</button>
+                    <button class="other-game-btn" id="extraLiuChong">掌决六冲</button>
+                    <button class="other-game-btn" id="extraCangGan">地支藏干</button>
                 </div>
                 <button class="close-modal" id="closeEndModal">关闭</button>
             </div>
         `;
         document.body.appendChild(modal);
         document.getElementById('closeEndModal').onclick = () => modal.remove();
-        document.getElementById('extraLiuHe').onclick = () => alert('📜 六合：子丑、寅亥、卯戌、辰酉、巳申、午未');
-        document.getElementById('extraLiuChong').onclick = () => alert('⚡ 六冲：子午、丑未、寅申、卯酉、辰戌、巳亥');
-        document.getElementById('extraCangGan').onclick = () => alert('🌿 地支藏干：子藏癸、丑藏己癸辛、寅藏甲丙戊、卯藏乙、辰藏戊乙癸、巳藏丙戊庚、午藏丁己、未藏己丁乙、申藏庚壬戊、酉藏辛、戌藏戊辛丁、亥藏壬甲');
+        document.getElementById('extraLiuHe').onclick = () => alert('六合：子丑、寅亥、卯戌、辰酉、巳申、午未');
+        document.getElementById('extraLiuChong').onclick = () => alert('六冲：子午、丑未、寅申、卯酉、辰戌、巳亥');
+        document.getElementById('extraCangGan').onclick = () => alert('地支藏干：子藏癸、丑藏己癸辛、寅藏甲丙戊、卯藏乙、辰藏戊乙癸、巳藏丙戊庚、午藏丁己、未藏己丁乙、申藏庚壬戊、酉藏辛、戌藏戊辛丁、亥藏壬甲');
     }
 
     function showLevelModal() {
         let modal = document.createElement('div');
         modal.className = 'modal-mask';
-        let levelsHtml = `<div class="modal-panel"><h3>📖 选择关卡</h3><div class="level-options">`;
+        let levelsHtml = `<div class="modal-panel"><h3>选择关卡</h3><div class="level-options">`;
         for(let i=1;i<=6;i++) {
             levelsHtml += `<button class="level-opt" data-level="${i}">${i}关 · ${levelRules[i].name}</button>`;
         }
@@ -734,7 +767,7 @@
     const soundBtn = document.getElementById('soundToggleBtn');
     soundBtn.onclick = () => {
         soundEnabled = !soundEnabled;
-        soundBtn.innerText = soundEnabled ? '🔊 音效开' : '🔇 音效关';
+        soundBtn.innerText = soundEnabled ? '音效开' : '音效关';
     };
     
     initLevel(1);
