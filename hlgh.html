@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>时空能量课堂·合了个合</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f9eec1 0%, #f8d5a3 100%);
+            font-family: 'Segoe UI', 'Noto Sans CJK SC', 'Poppins', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 245, 220, 0.88);
+            backdrop-filter: blur(8px);
+            border-radius: 56px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2), inset 0 1px 3px rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            padding: 16px 14px 20px;
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0a4b8a, #1e6faf);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            margin: 0 0 12px 0;
+        }
+
+        .buttons-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .ctrl-btn {
+            background: #fbb954;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #2c2b26;
+            box-shadow: 0 3px 0 #a45d2e;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.05s linear;
+        }
+        .ctrl-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #a45d2e;
+        }
+        .level-select-btn {
+            background: #58a9c2;
+            box-shadow: 0 3px 0 #2c6f8c;
+            color: white;
+        }
+        .hint-btn {
+            background: #6fa8dc;
+            color: white;
+            box-shadow: 0 3px 0 #3c6e8f;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e4c48b;
+            border-radius: 60px;
+            padding: 6px 16px;
+            margin-bottom: 16px;
+        }
+        .left-info {
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+        .level-name {
+            font-weight: bold;
+            color: #9b4a1a;
+            background: #ffebb5;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+        }
+        .score-box {
+            background: #2e2c2a;
+            color: #ffd966;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+        .sound-btn {
+            background: #7c4f2e;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 40px;
+            color: #ffefc0;
+            box-shadow: 0 2px 0 #4a2a18;
+            cursor: pointer;
+        }
+        .sound-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #4a2a18; }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px 10px;
+            background: #ecd9b4;
+            border-radius: 48px;
+            padding: 18px 12px;
+            margin-bottom: 16px;
+            box-shadow: inset 0 0 0 3px #fff6e5, inset 0 0 0 8px #e2c294, 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            aspect-ratio: 4 / 5;
+            background: #fff9ef;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.15);
+            transition: all 0.08s linear;
+            cursor: pointer;
+            transform: translateY(-2px);
+        }
+        .card:active {
+            transform: translateY(4px);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+        }
+        .card.tiangan {
+            font-size: 1.8rem;
+            border-bottom: 5px solid #3b82f6;
+            border-right: 2px solid #3b82f6;
+        }
+        .card.dizhi {
+            font-size: 1.4rem;
+            border-bottom: 5px solid #2ecc71;
+            border-right: 2px solid #2ecc71;
+        }
+        .card[data-wuxing="木"] { color: #2e7d32; text-shadow: 0 1px 0 #c8e6c9; }
+        .card[data-wuxing="火"] { color: #e65100; text-shadow: 0 1px 0 #ffccbc; }
+        .card[data-wuxing="土"] { color: #8d6e63; text-shadow: 0 1px 0 #efebe9; }
+        .card[data-wuxing="金"] { color: #bf8f00; text-shadow: 0 1px 0 #fff9c4; }
+        .card[data-wuxing="水"] { color: #0277bd; text-shadow: 0 1px 0 #b3e5fc; }
+
+        .hint-highlight {
+            animation: hintBlink 0.8s ease-in-out 3;
+            box-shadow: 0 0 0 3px gold, 0 7px 0 rgba(0,0,0,0.15);
+        }
+        @keyframes hintBlink {
+            0% { box-shadow: 0 0 0 2px gold, 0 7px 0 rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 0 0 6px #ffb347, 0 7px 0 rgba(0,0,0,0.15); }
+            100% { box-shadow: 0 0 0 2px gold, 0 7px 0 rgba(0,0,0,0.15); }
+        }
+
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e4c48b;
+            border-radius: 60px;
+            padding: 6px 16px;
+            margin-top: 8px;
+        }
+        .stack-info {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2d2b26;
+        }
+        .end-btn {
+            background: #b95f2e;
+            color: white;
+            box-shadow: 0 2px 0 #6e3a18;
+            padding: 5px 20px;
+            font-size: 0.85rem;
+        }
+
+        .shake-anim {
+            animation: shakeCard 0.2s ease-in-out 0s 2;
+        }
+        @keyframes shakeCard {
+            0% { transform: translateX(0px) translateY(-2px); }
+            25% { transform: translateX(-4px) translateY(-2px);}
+            75% { transform: translateX(4px) translateY(-2px);}
+            100% { transform: translateX(0px) translateY(-2px);}
+        }
+        .impact-anim {
+            animation: impactMove 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+        }
+        @keyframes impactMove {
+            0% { transform: translateX(0px) translateY(-2px); }
+            50% { transform: translateX(14px) scale(1.05);}
+            100% { transform: translateX(0px) translateY(-2px);}
+        }
+
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-panel {
+            background: #fff2e0;
+            border-radius: 48px;
+            width: 80%;
+            max-width: 320px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+        }
+        .level-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .level-opt {
+            background: #fbc97f;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            width: 110px;
+        }
+        .close-modal {
+            background: #a5662e;
+            color: white;
+            margin-top: 10px;
+            padding: 6px 20px;
+            border-radius: 40px;
+            border: none;
+        }
+        .other-game-btn {
+            background: #6f9e3f;
+            color: white;
+            border: none;
+            margin: 8px 6px;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+        .merge-toast {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffecb3;
+            color: #b25f00;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            z-index: 1100;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: fadeToast 2.8s forwards;
+        }
+        @keyframes fadeToast {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.9);}
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1);}
+            85% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+            100% { opacity: 0; visibility: hidden;}
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="game-title">⚡时空能量课堂·合了个合✨</div>
+
+    <div class="buttons-row">
+        <button class="ctrl-btn" id="shuffleBtn">🃏 打乱</button>
+        <button class="ctrl-btn" id="restartBtn">🔄 重开</button>
+        <button class="ctrl-btn hint-btn" id="hintBtn">💡 提示</button>
+        <button class="ctrl-btn level-select-btn" id="openLevelBtn">📚 选择关卡</button>
+    </div>
+
+    <div class="info-row">
+        <div class="left-info">
+            <div class="level-name" id="levelNameDisplay">第一关 · 天干五合</div>
+            <div class="score-box">🎯 <span id="scoreValue">0</span></div>
+        </div>
+        <button class="sound-btn" id="soundToggleBtn">🔊 音效开</button>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <div class="bottom-bar">
+        <div class="stack-info" id="stackInfo">📦 牌堆剩余: 0 张</div>
+        <button class="ctrl-btn end-btn" id="endGameBtn">🏁 先合到这</button>
+    </div>
+</div>
+
+<script>
+    const wuxingMap = {
+        '甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水',
+        '子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火','午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'
+    };
+    const tianGanHe = [['甲','己'],['乙','庚'],['丙','辛'],['丁','壬'],['戊','癸']];
+    const diZhiLiuHe = [['子','丑'],['寅','亥'],['卯','戌'],['辰','酉'],['巳','申'],['午','未']];
+    const anHe = [['寅','丑'],['午','亥'],['卯','申']];
+    const ziHe = [['壬','午'],['癸','巳'],['己','亥'],['丁','亥'],['戊','子'],['辛','巳']];
+    const sanHeGroups = [['申','子','辰'],['亥','卯','未'],['寅','午','戌'],['巳','酉','丑']];
+    const banHePairs = [['亥','卯'],['寅','午'],['巳','酉'],['申','子'],['卯','未'],['午','戌'],['酉','丑'],['子','辰']];
+    const gongHeMap = { '亥未':'卯','寅戌':'午','巳丑':'酉','申辰':'子' };
+
+    function buildPairMap(pairs) {
+        const map = new Map();
+        for(let [a,b] of pairs) { map.set(a,b); map.set(b,a); }
+        return map;
+    }
+    const tianGanMap = buildPairMap(tianGanHe);
+    const diZhiMap = buildPairMap(diZhiLiuHe);
+    const anHeMap = buildPairMap(anHe);
+    const ziHeMap = buildPairMap(ziHe);
+    const banHeMap = buildPairMap(banHePairs);
+    function isGongHe(a,b) {
+        let key = a+b, key2 = b+a;
+        if(gongHeMap[key]) return gongHeMap[key];
+        if(gongHeMap[key2]) return gongHeMap[key2];
+        return null;
+    }
+
+    const levelRules = {
+        1: { name:'天干五合', useTG:true, useDZ:false, useAN:false, useZHe:false, useSanHe:false, useBanHe:false, useGongHe:false, tripleMode:false },
+        2: { name:'地支六合', useTG:false, useDZ:true, useAN:false, useZHe:false, useSanHe:false, useBanHe:false, useGongHe:false, tripleMode:false },
+        3: { name:'地支暗合', useTG:false, useDZ:false, useAN:true, useZHe:false, useSanHe:false, useBanHe:false, useGongHe:false, tripleMode:false },
+        4: { name:'干支自合', useTG:false, useDZ:false, useAN:false, useZHe:true, useSanHe:false, useBanHe:false, useGongHe:false, tripleMode:false },
+        5: { name:'地支三合', useTG:false, useDZ:false, useAN:false, useZHe:false, useSanHe:true, useBanHe:false, useGongHe:false, tripleMode:true },
+        6: { name:'万象归一', useTG:true, useDZ:true, useAN:true, useZHe:true, useSanHe:true, useBanHe:true, useGongHe:true, tripleMode:false }
+    };
+
+    let currentLevel = 1;
+    let totalScore = 0;
+    let soundEnabled = true;
+    let selectedCards = [];
+    let allCardsData = [];
+    let visibleCards = [];
+    let nextCardId = 1;
+    let waitForMerge = false;
+    const GRID_SIZE = 16;
+
+    function shuffleArray(arr) {
+        for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+        return arr;
+    }
+
+    function createCardItem(text) {
+        if(!text || typeof text !== 'string') text = '甲';
+        let type = ( '甲乙丙丁戊己庚辛壬癸'.includes(text) ) ? 'tiangan' : 'dizhi';
+        return { id: nextCardId++, text, type, wuxing: wuxingMap[text] || '土' };
+    }
+
+    // 修复第二关和第五关牌堆数量，保证完全配对无单张残留
+    function generateDeckForLevel(level) {
+        const tgChars = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+        const dzChars = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+        let deck = [];
+        if(level === 1) {
+            for(let i=0;i<2;i++) tgChars.forEach(c => deck.push(createCardItem(c)));
+        } 
+        else if(level === 2) {
+            // 地支六合共6对，让每对出现2次，总牌数24张，完全可配对
+            for(let i=0;i<2;i++) {
+                for(let [a,b] of diZhiLiuHe) {
+                    deck.push(createCardItem(a));
+                    deck.push(createCardItem(b));
+                }
+            }
+        }
+        else if(level === 3) {
+            let need = ['寅','丑','午','亥','卯','申'];
+            for(let i=0;i<3;i++) need.forEach(c => deck.push(createCardItem(c)));
+        }
+        else if(level === 4) {
+            let items = ['壬','午','癸','巳','己','亥','丁','亥','戊','子','辛','巳'];
+            items.forEach(c => deck.push(createCardItem(c)));
+            deck = deck.concat(deck.slice(0,4));
+        }
+        else if(level === 5) {
+            // 三合：每组三个字，让每组每个字出现2次，共4组*3*2=24张，完全可三合配对
+            for(let g of sanHeGroups) {
+                for(let i=0;i<2;i++) {
+                    for(let ch of g) deck.push(createCardItem(ch));
+                }
+            }
+        }
+        else if(level === 6) {
+            let allChars = [...tgChars, ...dzChars, '寅','丑','午','亥','卯','申','壬','午','癸','巳','己','亥','丁','戊','子','辛','戌','酉','辰'];
+            allChars = [...new Set(allChars)];
+            for(let i=0;i<3;i++) {
+                for(let ch of allChars) deck.push(createCardItem(ch));
+            }
+            deck = shuffleArray(deck).slice(0, 32);
+        }
+        deck = deck.filter(c => c && c.text && typeof c.text === 'string');
+        while(deck.length < GRID_SIZE) deck = deck.concat(deck.slice(0, GRID_SIZE - deck.length));
+        return shuffleArray(deck);
+    }
+
+    function refillToFull() {
+        while(visibleCards.length < GRID_SIZE && allCardsData.length > 0) {
+            visibleCards.push(allCardsData.shift());
+        }
+        renderCards();
+        updateStackInfo();
+    }
+
+    function updateScoreUI() { document.getElementById('scoreValue').innerText = totalScore; }
+    function updateStackInfo() { document.getElementById('stackInfo').innerHTML = `📦 牌堆剩余: ${allCardsData.length} 张`; }
+    function updateLevelName() {
+        document.getElementById('levelNameDisplay').innerText = `第${currentLevel}关 · ${levelRules[currentLevel].name}`;
+    }
+
+    function renderCards() {
+        const grid = document.getElementById('cardsGrid');
+        grid.innerHTML = '';
+        for(let i=0; i<visibleCards.length; i++) {
+            const card = visibleCards[i];
+            const div = document.createElement('div');
+            div.className = `card ${card.type}`;
+            div.setAttribute('data-wuxing', card.wuxing);
+            div.innerText = card.text;
+            div.onclick = (e) => { e.stopPropagation(); onCardClick(i); };
+            grid.appendChild(div);
+            card.dom = div;
+        }
+        for(let i=visibleCards.length; i<GRID_SIZE; i++) {
+            let empty = document.createElement('div');
+            empty.style.visibility = 'hidden';
+            empty.style.boxShadow = 'none';
+            empty.style.background = 'transparent';
+            empty.onclick = null;
+            grid.appendChild(empty);
+        }
+    }
+
+    function onCardClick(idx) {
+        if(waitForMerge) return;
+        if(idx >= visibleCards.length) return;
+        const card = visibleCards[idx];
+        if(!card) return;
+        if(card.dom) { card.dom.classList.add('shake-anim'); setTimeout(()=>card.dom.classList.remove('shake-anim'),280); }
+        if(selectedCards.some(s=>s.idx===idx)) return;
+        selectedCards.push({ idx, card, text: card.text });
+        const rule = levelRules[currentLevel];
+        if(rule.tripleMode && currentLevel===5) {
+            if(selectedCards.length === 3) tryTripleMatch();
+            else highlightSelected();
+        } else {
+            if(selectedCards.length === 2) tryMatchPair();
+            else highlightSelected();
+        }
+    }
+
+    function highlightSelected() {
+        document.querySelectorAll('.card').forEach(c=>c.style.border = '');
+        for(let sel of selectedCards) {
+            let dom = visibleCards[sel.idx]?.dom;
+            if(dom) dom.style.border = '4px solid gold';
+        }
+    }
+    function clearSelectedStyle() {
+        document.querySelectorAll('.card').forEach(c=>c.style.border = '');
+    }
+
+    function isPairMatch(a, b, rule) {
+        if(rule.useTG && (tianGanMap.get(a)===b || tianGanMap.get(b)===a)) return { ok:true, type:'合' };
+        if(rule.useDZ && (diZhiMap.get(a)===b || diZhiMap.get(b)===a)) return { ok:true, type:'六合' };
+        if(rule.useAN && (anHeMap.get(a)===b || anHeMap.get(b)===a)) return { ok:true, type:'暗合' };
+        if(rule.useZHe && (ziHeMap.get(a)===b || ziHeMap.get(b)===a)) return { ok:true, type:'自合' };
+        if(rule.useBanHe && (banHeMap.get(a)===b || banHeMap.get(b)===a)) return { ok:true, type:'半合' };
+        if(rule.useGongHe) {
+            let gong = isGongHe(a,b);
+            if(gong) return { ok:true, type:'拱', newCard: gong };
+        }
+        return { ok:false };
+    }
+
+    async function tryMatchPair() {
+        if(selectedCards.length!==2) return;
+        waitForMerge = true;
+        let [c1, c2] = selectedCards;
+        let textA = c1.text, textB = c2.text;
+        const rule = levelRules[currentLevel];
+        const match = isPairMatch(textA, textB, rule);
+        
+        if(!match.ok) {
+            if(soundEnabled) beep(false);
+            showToast(`❌ ${textA} 与 ${textB} 未相合`, 1000);
+            selectedCards = [];
+            clearSelectedStyle();
+            waitForMerge = false;
+            return;
+        }
+        
+        if(soundEnabled) beep(true);
+        let domSec = visibleCards[c2.idx]?.dom;
+        if(domSec) domSec.classList.add('impact-anim');
+        setTimeout(()=>{ if(domSec) domSec.classList.remove('impact-anim'); },200);
+        
+        let mergeName = `${textA}${textB}${match.type}`;
+        if(match.type === '拱') mergeName = `${textA}${textB}拱·生${match.newCard}`;
+        showToast(`✨${mergeName}✨`, 2000);
+        
+        let indices = [c1.idx, c2.idx].sort((a,b)=>b-a);
+        for(let i of indices) visibleCards.splice(i,1);
+        totalScore += 10;
+        updateScoreUI();
+        
+        if(match.newCard) {
+            let newCard = createCardItem(match.newCard);
+            visibleCards.unshift(newCard);
+        }
+        refillToFull();
+        selectedCards = [];
+        clearSelectedStyle();
+        waitForMerge = false;
+        checkLevelComplete();
+    }
+
+    async function tryTripleMatch() {
+        if(selectedCards.length!==3) return;
+        let group = sanHeGroups.find(g => {
+            let texts = selectedCards.map(s=>s.text);
+            return g.every(c=>texts.includes(c)) && texts.length===3;
+        });
+        if(group) {
+            if(soundEnabled) beep(true);
+            showToast(`🔥${group.join('')}三合大吉🔥`, 2000);
+            let indices = selectedCards.map(s=>s.idx).sort((a,b)=>b-a);
+            for(let i of indices) visibleCards.splice(i,1);
+            totalScore += 30;
+            updateScoreUI();
+            refillToFull();
+            selectedCards = [];
+            clearSelectedStyle();
+            waitForMerge = false;
+            checkLevelComplete();
+        } else {
+            if(soundEnabled) beep(false);
+            showToast(`❌ 三合不成`, 1000);
+            selectedCards = [];
+            clearSelectedStyle();
+            waitForMerge = false;
+        }
+    }
+
+    function checkLevelComplete() {
+        if(allCardsData.length===0 && visibleCards.length===0) {
+            if(currentLevel < 6) {
+                showToast(`🎉 第${currentLevel}关通关！进入下一关 🎉`, 2000);
+                currentLevel++;
+                totalScore += 50;
+                updateScoreUI();
+                initLevel(currentLevel);
+            } else {
+                showToast(`🏆 完美通关！总分${totalScore} 🏆`, 3000);
+            }
+        }
+    }
+
+    function initLevel(level) {
+        currentLevel = level;
+        updateLevelName();
+        waitForMerge = false;
+        selectedCards = [];
+        clearSelectedStyle();
+        let deck = generateDeckForLevel(level);
+        allCardsData = [...deck];
+        visibleCards = [];
+        let need = Math.min(GRID_SIZE, allCardsData.length);
+        for(let i=0;i<need;i++) visibleCards.push(allCardsData.shift());
+        renderCards();
+        updateStackInfo();
+    }
+
+    function restartLevel() {
+        totalScore = 0;
+        updateScoreUI();
+        initLevel(currentLevel);
+    }
+
+    function shuffleVisible() {
+        if(waitForMerge) return;
+        visibleCards = shuffleArray(visibleCards);
+        renderCards();
+        selectedCards = [];
+        clearSelectedStyle();
+        showToast('🃏 牌序已打乱', 800);
+    }
+
+    function hintAction() {
+        if(waitForMerge) return;
+        const rule = levelRules[currentLevel];
+        let indices = [];
+        for(let i=0;i<visibleCards.length;i++) {
+            for(let j=i+1;j<visibleCards.length;j++) {
+                let a = visibleCards[i].text, b = visibleCards[j].text;
+                if(isPairMatch(a,b,rule).ok) { indices = [i,j]; break; }
+            }
+            if(indices.length) break;
+        }
+        if(indices.length===0 && rule.tripleMode && currentLevel===5) {
+            for(let i=0;i<visibleCards.length;i++) {
+                for(let j=i+1;j<visibleCards.length;j++) {
+                    for(let k=j+1;k<visibleCards.length;k++) {
+                        let set = [visibleCards[i].text, visibleCards[j].text, visibleCards[k].text];
+                        let group = sanHeGroups.find(g => set.every(s=>g.includes(s)) && g.length===3);
+                        if(group) { indices = [i,j,k]; break; }
+                    }
+                    if(indices.length) break;
+                }
+                if(indices.length) break;
+            }
+        }
+        if(indices.length) {
+            indices.forEach(idx => {
+                let dom = visibleCards[idx]?.dom;
+                if(dom) dom.classList.add('hint-highlight');
+                setTimeout(() => dom?.classList.remove('hint-highlight'), 2000);
+            });
+            showToast('💡 高亮处可合成', 1500);
+        } else {
+            showToast('⚠️ 已全部合成，重新开局', 1800);
+            setTimeout(() => restartLevel(), 1800);
+        }
+    }
+
+    function beep(success) {
+        try {
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = success ? 880 : 440;
+            gain.gain.value = 0.15;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime+0.4);
+            osc.stop(audioCtx.currentTime+0.4);
+        } catch(e) {}
+    }
+
+    function showToast(msg, duration) {
+        let toast = document.createElement('div');
+        toast.className = 'merge-toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(()=>toast.remove(), duration);
+    }
+
+    function endGameAndShowScore() {
+        let modal = document.createElement('div');
+        modal.className = 'modal-mask';
+        modal.innerHTML = `
+            <div class="modal-panel">
+                <h3>✨ 游戏结束 ✨</h3>
+                <p style="font-size:1.8rem; margin:10px 0; font-weight:bold;">${totalScore} 分</p>
+                <div style="margin: 15px 0;">
+                    <button class="other-game-btn" id="extraLiuHe">📜 掌决六合</button>
+                    <button class="other-game-btn" id="extraLiuChong">⚡ 掌决六冲</button>
+                    <button class="other-game-btn" id="extraCangGan">🌿 地支藏干</button>
+                </div>
+                <button class="close-modal" id="closeEndModal">关闭</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('closeEndModal').onclick = () => modal.remove();
+        document.getElementById('extraLiuHe').onclick = () => alert('📜 六合：子丑、寅亥、卯戌、辰酉、巳申、午未');
+        document.getElementById('extraLiuChong').onclick = () => alert('⚡ 六冲：子午、丑未、寅申、卯酉、辰戌、巳亥');
+        document.getElementById('extraCangGan').onclick = () => alert('🌿 地支藏干：子藏癸、丑藏己癸辛、寅藏甲丙戊、卯藏乙、辰藏戊乙癸、巳藏丙戊庚、午藏丁己、未藏己丁乙、申藏庚壬戊、酉藏辛、戌藏戊辛丁、亥藏壬甲');
+    }
+
+    function showLevelModal() {
+        let modal = document.createElement('div');
+        modal.className = 'modal-mask';
+        let levelsHtml = `<div class="modal-panel"><h3>📖 选择关卡</h3><div class="level-options">`;
+        for(let i=1;i<=6;i++) {
+            levelsHtml += `<button class="level-opt" data-level="${i}">${i}关 · ${levelRules[i].name}</button>`;
+        }
+        levelsHtml += `</div><button class="close-modal" id="closeLevelModal">取消</button></div>`;
+        modal.innerHTML = levelsHtml;
+        document.body.appendChild(modal);
+        document.querySelectorAll('.level-opt').forEach(btn => {
+            btn.onclick = () => {
+                let lvl = parseInt(btn.getAttribute('data-level'));
+                if(lvl !== currentLevel) {
+                    totalScore = 0;
+                    updateScoreUI();
+                    initLevel(lvl);
+                }
+                modal.remove();
+            };
+        });
+        document.getElementById('closeLevelModal').onclick = () => modal.remove();
+    }
+
+    document.getElementById('shuffleBtn').onclick = shuffleVisible;
+    document.getElementById('restartBtn').onclick = () => restartLevel();
+    document.getElementById('hintBtn').onclick = hintAction;
+    document.getElementById('endGameBtn').onclick = endGameAndShowScore;
+    document.getElementById('openLevelBtn').onclick = showLevelModal;
+    const soundBtn = document.getElementById('soundToggleBtn');
+    soundBtn.onclick = () => {
+        soundEnabled = !soundEnabled;
+        soundBtn.innerText = soundEnabled ? '🔊 音效开' : '🔇 音效关';
+    };
+    
+    initLevel(1);
+</script>
+</body>
+</html>
