@@ -46,7 +46,7 @@
         .game-header h1 {
             margin: 0;
             font-size: clamp(1.4rem, 6vw, 1.9rem);
-            color: #2c6e9e;   /* 蓝色字体 */
+            color: #2c6e9e;
             letter-spacing: 2px;
             font-weight: 700;
         }
@@ -154,7 +154,7 @@
             font-weight: 800;
             letter-spacing: 8px;
             font-family: 'Segoe UI', 'Noto Serif CJK SC', '华文楷书', serif;
-            color: #bc7a3c;
+            color: #c97e3a;   /* 干支新颜色：深琥珀色 */
             text-shadow: 2px 2px 0 #f3e2ca;
         }
         .game-title-tag {
@@ -168,13 +168,23 @@
             color: #8b5a36;
         }
 
-        /* 虚实按钮 */
+        /* 虚实按钮 - 绿色/紫色 */
         .action-buttons {
             display: flex;
             gap: 24px;
             justify-content: center;
             margin: 20px 0 15px;
             flex-wrap: wrap;
+        }
+        .btn-real {
+            background: #6fbf4c;   /* 绿色 */
+            color: #ffffff;
+            border-bottom: 3px solid #4a8a2e;
+        }
+        .btn-virtual {
+            background: #b280b2;   /* 紫色 */
+            color: #ffffff;
+            border-bottom: 3px solid #8b5c8b;
         }
         .btn-real, .btn-virtual {
             font-size: 1.7rem;
@@ -189,22 +199,12 @@
             box-shadow: 0 5px 0 rgba(100, 60, 20, 0.2);
             min-width: 130px;
         }
-        .btn-real {
-            background: #c9ab7b;
-            color: #2d2b1f;
-            border-bottom: 3px solid #9b6e42;
-        }
         .btn-real:hover:not(:disabled) {
-            background: #dabb97;
+            background: #82d55c;
             transform: translateY(-2px);
         }
-        .btn-virtual {
-            background: #dbbc91;
-            color: #3e2a1a;
-            border-bottom: 3px solid #aa7c4a;
-        }
         .btn-virtual:hover:not(:disabled) {
-            background: #e7ceaa;
+            background: #c994c9;
             transform: translateY(-2px);
         }
         .btn-real:disabled, .btn-virtual:disabled {
@@ -737,7 +737,6 @@
     virtualBtn.addEventListener('click', () => handleAnswer(false));
     resetBtn.addEventListener('click', resetGame);
     studyEndBtn.addEventListener('click', () => {
-        // 先学到这：跳转结算页面显示排行榜
         showRankModal();
     });
     soundToggleBtn.addEventListener('click', () => {
