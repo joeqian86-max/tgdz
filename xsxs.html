@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>时空能量课堂 · 干支虚实挑战</title>
+    <title>干支虚实 · 连击挑战</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,99 +12,101 @@
         }
 
         body {
-            background: #f8f1e2;  /* 暖米色背景 */
-            background-image: radial-gradient(circle at 10% 20%, rgba(230, 210, 170, 0.2) 2%, transparent 2.5%),
-                              radial-gradient(circle at 80% 70%, rgba(200, 170, 120, 0.15) 1.5%, transparent 2%);
-            background-size: 40px 40px, 32px 32px;
+            background: #f8f1e2;
+            background-image: radial-gradient(circle at 10% 20%, rgba(200, 170, 120, 0.15) 2%, transparent 2.5%);
+            background-size: 34px 34px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
             padding: 16px;
             margin: 0;
         }
 
-        /* 主卡片 - 淡米色纸质风格 */
+        /* 主卡片 */
         .game-container {
-            background: #fffcf5;
-            max-width: 680px;
+            max-width: 650px;
             width: 100%;
+            background: #fffbf2;
             border-radius: 56px;
-            box-shadow: 0 20px 35px rgba(120, 80, 40, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 35px rgba(100, 70, 40, 0.15);
             overflow: hidden;
             border: 1px solid #f0e2cf;
             transition: all 0.2s;
         }
 
-        /* 标题区 - 古风暖色 */
+        /* 头部 - 蓝色标题 */
         .game-header {
-            background: #f3ebd8;
+            background: #f5ecdb;
             padding: 1.2rem 1rem 0.8rem;
             text-align: center;
-            border-bottom: 2px solid #e2cfaa;
+            border-bottom: 2px solid #e9dccd;
         }
         .game-header h1 {
             margin: 0;
-            font-size: clamp(1.5rem, 6vw, 2rem);
-            font-weight: 700;
-            color: #a5673f;
+            font-size: clamp(1.4rem, 6vw, 1.9rem);
+            color: #2c6e9e;   /* 蓝色字体 */
             letter-spacing: 2px;
-            text-shadow: 1px 1px 0 #fef5e6;
-        }
-        .game-header .sub {
-            font-size: 0.75rem;
-            color: #b88b5a;
-            margin-top: 6px;
-            letter-spacing: 1px;
+            font-weight: 700;
         }
 
-        /* 计分栏 + 音效开关同行，右对齐 */
-        .score-panel {
+        /* 数据面板：连击、最高连击 + 按钮组在一行 */
+        .stats-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #fef7ed;
             padding: 12px 20px;
-            background: #f9f2e4;
-            border-bottom: 1px solid #e8d9c4;
+            border-bottom: 1px solid #eadbc5;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .stats {
+        .left-stats {
             display: flex;
             gap: 16px;
+            align-items: center;
         }
-        .score-box, .total-box {
-            background: #ede3cf;
-            padding: 4px 14px;
-            border-radius: 40px;
+        .stat-card {
+            background: #e8ddcb;
+            border-radius: 80px;
+            padding: 5px 18px;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
             font-weight: bold;
-            color: #785a3a;
-            font-size: 0.9rem;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 1px 2px rgba(255,245,220,0.8);
+            color: #6d4c2e;
+            box-shadow: inset 0 1px 2px #fff4e6, 0 1px 2px rgba(0,0,0,0.05);
         }
-        .score-box span, .total-box span {
-            color: #c27e4a;
-            font-size: 1.3rem;
+        .stat-card span:first-child {
+            font-size: 0.85rem;
+        }
+        .stat-card span:last-child {
+            font-size: 1.4rem;
             font-weight: 800;
-            margin-left: 6px;
+            color: #c2713a;
+            line-height: 1;
         }
-        .sound-toggle-small {
-            background: #e5d5bc;
+        .action-buttons-stats {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-btn {
+            background: #e2d2ba;
             border: none;
-            padding: 5px 14px;
-            border-radius: 50px;
-            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 40px;
             font-weight: 600;
-            color: #6b4c2c;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: 0.1s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .sound-toggle-small:hover {
-            background: #dac7a8;
+        .icon-btn:hover {
+            background: #d4c0a0;
             transform: scale(0.96);
         }
 
-        /* 计时器圆形 */
+        /* 计时器圆形展示 */
         .timer-area {
             display: flex;
             justify-content: center;
@@ -112,8 +114,8 @@
         }
         .timer-circle {
             background: #f7efdf;
-            width: 75px;
-            height: 75px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -123,18 +125,18 @@
             box-shadow: 0 6px 12px rgba(100, 60, 20, 0.1);
         }
         .timer-seconds {
-            font-size: 2.1rem;
+            font-size: 2.2rem;
             font-weight: bold;
             font-family: monospace;
             color: #a5682c;
             line-height: 1;
         }
         .timer-label {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: #b47c48;
         }
 
-        /* 答题区域 */
+        /* 答题区 */
         .quiz-area {
             padding: 5px 20px 20px;
             text-align: center;
@@ -143,7 +145,7 @@
             background: #fef8ef;
             border-radius: 64px;
             margin: 10px 10px 20px;
-            padding: 25px 10px;
+            padding: 30px 10px;
             box-shadow: inset 0 1px 4px #ffe8cf, 0 10px 18px rgba(80, 50, 20, 0.08);
             border: 1px solid #eedbbc;
         }
@@ -164,23 +166,22 @@
             border-radius: 60px;
             margin-bottom: 12px;
             color: #8b5a36;
-            box-shadow: inset 0 0 0 1px #fff9ef, 0 2px 4px rgba(0,0,0,0.05);
         }
 
         /* 虚实按钮 */
         .action-buttons {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             justify-content: center;
             margin: 20px 0 15px;
             flex-wrap: wrap;
         }
         .btn-real, .btn-virtual {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: bold;
-            padding: 12px 28px;
+            padding: 12px 32px;
             border: none;
-            border-radius: 60px;
+            border-radius: 66px;
             cursor: pointer;
             transition: 0.1s linear;
             font-family: inherit;
@@ -212,19 +213,16 @@
             cursor: not-allowed;
         }
 
-        /* 反馈简洁条 */
+        /* 反馈区 */
         .feedback-area {
-            background: #f3eadc;
-            margin: 10px 16px;
+            background: #efe3d1;
+            margin: 10px 20px;
             padding: 12px;
             border-radius: 48px;
-            font-size: 1rem;
-            font-weight: 500;
             text-align: center;
-            color: #5e3e24;
+            font-weight: 500;
+            color: #7a582e;
             min-height: 70px;
-            transition: 0.1s;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px white;
         }
         .feedback-correct {
             background: #dee5bf;
@@ -236,42 +234,34 @@
             border-left: 6px solid #d9986a;
             color: #aa5a2c;
         }
+        .feedback-neutral {
+            background: #efe3d1;
+        }
 
         /* 底部按钮组 */
         .control-group {
             display: flex;
             justify-content: center;
-            gap: 18px;
-            margin: 8px 20px 24px;
-            flex-wrap: wrap;
+            gap: 20px;
+            margin: 8px 20px 28px;
         }
-        .reset-btn, .study-end-btn {
-            background: #e7dac8;
+        .reset-btn, .study-btn {
+            background: #e6d7c0;
             border: none;
-            padding: 8px 24px;
+            padding: 10px 28px;
             border-radius: 60px;
             font-weight: 600;
-            color: #6b4b2a;
+            color: #775a37;
             cursor: pointer;
-            font-family: inherit;
             transition: 0.1s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-size: 0.9rem;
         }
-        .reset-btn:hover, .study-end-btn:hover {
-            background: #dacdaf;
+        .reset-btn:hover, .study-btn:hover {
+            background: #dac5a5;
             transform: scale(0.97);
         }
 
-        .footer-note {
-            background: #f6efdf;
-            padding: 8px;
-            text-align: center;
-            font-size: 0.65rem;
-            color: #b28b5e;
-            border-top: 1px solid #eddbba;
-        }
-
-        /* 模态框排行榜 - 温暖色调 */
+        /* 排行榜模态框 */
         .modal {
             display: none;
             position: fixed;
@@ -336,98 +326,86 @@
             color: #4c351c;
         }
 
-        /* 手机适配优化 */
         @media (max-width: 550px) {
-            .game-container {
-                border-radius: 36px;
-            }
             .btn-real, .btn-virtual {
                 font-size: 1.3rem;
-                padding: 8px 18px;
+                padding: 8px 20px;
                 min-width: 110px;
             }
-            .ganzhi-text {
-                letter-spacing: 4px;
-            }
             .timer-circle {
-                width: 60px;
-                height: 60px;
+                width: 65px;
+                height: 65px;
             }
             .timer-seconds {
-                font-size: 1.7rem;
+                font-size: 1.8rem;
             }
-            .stats {
+            .stat-card span:last-child {
+                font-size: 1.2rem;
+            }
+            .left-stats {
                 gap: 8px;
-            }
-            .score-box, .total-box {
-                padding: 2px 10px;
-                font-size: 0.75rem;
-            }
-            .score-box span, .total-box span {
-                font-size: 1.1rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="game-container" id="gameApp">
+<div class="game-container">
     <div class="game-header">
-        <h1>⚡ 时空能量课堂 · 虚实虚实 ⚡</h1>
-        <div class="sub">天干通根为【实】 · 无根虚浮为【虚】</div>
+        <h1>干支虚实 · 连击挑战</h1>
     </div>
 
-    <div class="score-panel">
-        <div class="stats">
-            <div class="score-box">✅ 能量积分 <span id="correctCount">0</span></div>
-            <div class="total-box">📊 挑战次数 <span id="answeredCount">0</span></div>
+    <div class="stats-panel">
+        <div class="left-stats">
+            <div class="stat-card">连击 <span id="comboCount">0</span></div>
+            <div class="stat-card">最高连击 <span id="maxComboRecord">0</span></div>
         </div>
-        <button class="sound-toggle-small" id="soundToggleSmall">🔊 音效 ON</button>
+        <div class="action-buttons-stats">
+            <button class="icon-btn" id="soundToggleBtn">音效 ON</button>
+            <button class="icon-btn" id="openRankBtn">排行榜</button>
+        </div>
     </div>
 
     <div class="timer-area">
         <div class="timer-circle">
-            <div class="timer-seconds" id="timerDisplay">5</div>
+            <div class="timer-seconds" id="timerDisplay">5.0</div>
             <div class="timer-label">秒</div>
         </div>
     </div>
 
     <div class="quiz-area">
-        <div class="game-title-tag">🔮 此干支是【实】还是【虚】？ 🔮</div>
+        <div class="game-title-tag">此干支是【实】还是【虚】？</div>
         <div class="ganzhi-display">
             <div class="ganzhi-text" id="currentGanZhi">甲子</div>
         </div>
         <div class="action-buttons">
-            <button class="btn-real" id="realBtn">实 🌳</button>
-            <button class="btn-virtual" id="virtualBtn">虚 ☁️</button>
+            <button class="btn-real" id="realBtn">实</button>
+            <button class="btn-virtual" id="virtualBtn">虚</button>
         </div>
         <div class="feedback-area" id="feedbackMsg">
-            ✨ 限时判断，答对自动加速挑战 ✨
+            限时判断，答对连击加分
         </div>
     </div>
 
     <div class="control-group">
-        <button class="reset-btn" id="resetBtn">🔄 重置游戏</button>
-        <button class="study-end-btn" id="studyEndBtn">📚 就学到这</button>
-    </div>
-    <div class="footer-note">
-        🌟 限时挑战 | 初始5秒，每对3题加速 (最低3秒)
+        <button class="reset-btn" id="resetGameBtn">新的一局</button>
+        <button class="study-btn" id="studyEndBtn">先学到这</button>
     </div>
 </div>
 
-<!-- 结算排行榜模态框 -->
-<div id="rankingModal" class="modal">
+<!-- 排行榜模态框 -->
+<div id="rankModal" class="modal">
     <div class="modal-card">
-        <h3>🏆 能量排行榜 🏆</h3>
+        <h3>最高连击榜</h3>
         <div id="rankListContainer" class="rank-list">加载中...</div>
         <div>
             <input type="text" id="nicknameInput" class="nickname-input" placeholder="输入昵称登榜" maxlength="12">
         </div>
-        <button id="closeRankingBtn" class="modal-close-btn">继续修行</button>
+        <button id="closeRankBtn" class="modal-close-btn">返回游戏</button>
     </div>
 </div>
 
 <script>
-    // ---------- 虚实题库 ----------
+    // ---------- 完整虚实题库 ----------
     const realList = [
         "甲寅", "甲辰", "甲子", "乙亥", "乙卯", "乙未", "丙寅", "丙午", "丙戌",
         "丁巳", "丁卯", "丁未", "戊戌", "戊午", "戊辰", "己巳", "己未", "己丑",
@@ -443,78 +421,231 @@
     realList.forEach(g => questionBank.push({ ganzhi: g, isReal: true }));
     virtualList.forEach(g => questionBank.push({ ganzhi: g, isReal: false }));
 
-    // ----- 游戏状态 -----
+    // ---------- 游戏状态 ----------
     let currentQuestion = null;
-    let answered = false;
-    let correctTotal = 0;
-    let answeredTotal = 0;
-    let currentTimeout = null;
-    let nextQuestionTimeout = null;
-    let currentTimeLeft = 5;
+    let combo = 0;
+    let maxComboThisSession = 0;        // 本次游戏最高连击
+    let timeLeft = 5.0;
     let timerInterval = null;
-    let dynamicTimeLimit = 5;      // 初始5秒，最低3秒
+    let canAnswer = true;
+    let waitingNext = false;
+    let nextQuestionTimeout = null;
 
-    // 音效
+    // 音效相关
     let soundEnabled = true;
     let audioCtx = null;
     let isAudioUnlocked = false;
 
+    // DOM 元素
+    const ganzhiElem = document.getElementById('currentGanZhi');
+    const comboSpan = document.getElementById('comboCount');
+    const maxComboRecordSpan = document.getElementById('maxComboRecord');
+    const timerDisplaySpan = document.getElementById('timerDisplay');
+    const feedbackDiv = document.getElementById('feedbackMsg');
+    const realBtn = document.getElementById('realBtn');
+    const virtualBtn = document.getElementById('virtualBtn');
+    const resetBtn = document.getElementById('resetGameBtn');
+    const studyEndBtn = document.getElementById('studyEndBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const openRankBtn = document.getElementById('openRankBtn');
+
+    // ---------- 排行榜（基于最高连击）----------
+    let currentUserNick = localStorage.getItem('userNick') || "修行者";
+    let rankData = JSON.parse(localStorage.getItem('comboRank')) || [];
+
+    function saveRank(nick, maxComboValue) {
+        let existing = rankData.find(entry => entry.nick === nick);
+        if (existing) {
+            if (maxComboValue > existing.maxCombo) {
+                existing.maxCombo = maxComboValue;
+                existing.date = Date.now();
+            }
+        } else {
+            rankData.push({ nick: nick, maxCombo: maxComboValue, date: Date.now() });
+        }
+        rankData.sort((a,b) => {
+            if (a.maxCombo !== b.maxCombo) return b.maxCombo - a.maxCombo;
+            else return b.date - a.date;
+        });
+        if (rankData.length > 10) rankData = rankData.slice(0, 10);
+        localStorage.setItem('comboRank', JSON.stringify(rankData));
+    }
+
+    function updateRankingUI() {
+        const container = document.getElementById('rankListContainer');
+        if (!container) return;
+        if (rankData.length === 0) {
+            container.innerHTML = '<div class="rank-item">暂无记录，成为第一吧！</div>';
+            return;
+        }
+        container.innerHTML = rankData.map((entry, idx) => {
+            return `<div class="rank-item"><span>${idx+1}. ${escapeHtml(entry.nick)}</span><span>${entry.maxCombo} 连击</span></div>`;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function showRankModal() {
+        updateRankingUI();
+        const modal = document.getElementById('rankModal');
+        const nicknameInput = document.getElementById('nicknameInput');
+        nicknameInput.value = currentUserNick;
+        modal.style.display = 'flex';
+    }
+
+    function closeRankModal() {
+        const modal = document.getElementById('rankModal');
+        modal.style.display = 'none';
+        const newNick = document.getElementById('nicknameInput').value.trim();
+        if (newNick !== "") {
+            currentUserNick = newNick;
+            localStorage.setItem('userNick', currentUserNick);
+        }
+    }
+
+    // 更新本次最高连击并保存到排行榜
+    function updateMaxComboAndSave() {
+        if (combo > maxComboThisSession) {
+            maxComboThisSession = combo;
+            maxComboRecordSpan.innerText = maxComboThisSession;
+            if (maxComboThisSession > 0) {
+                saveRank(currentUserNick, maxComboThisSession);
+            }
+        }
+    }
+
+    // ---------- 游戏逻辑 ----------
+    function getRandomQuestion() {
+        const idx = Math.floor(Math.random() * questionBank.length);
+        return { ...questionBank[idx] };
+    }
+
+    function updateStatsUI() {
+        comboSpan.innerText = combo;
+        if (combo > maxComboThisSession) {
+            maxComboThisSession = combo;
+            maxComboRecordSpan.innerText = maxComboThisSession;
+            saveRank(currentUserNick, maxComboThisSession);
+        }
+    }
+
+    function breakCombo() {
+        if (combo > 0) {
+            combo = 0;
+            updateStatsUI();
+            return true;
+        }
+        return false;
+    }
+
+    // 倒计时控制
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function startCountdown() {
+        if (timerInterval) stopTimer();
+        canAnswer = true;
+        timeLeft = 5.0;
+        timerDisplaySpan.innerText = timeLeft.toFixed(1);
+        timerInterval = setInterval(() => {
+            if (!canAnswer || waitingNext) return;
+            if (timeLeft <= 0.05) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                if (canAnswer && !waitingNext) {
+                    handleTimeout();
+                }
+            } else {
+                timeLeft -= 0.1;
+                if (timeLeft < 0) timeLeft = 0;
+                timerDisplaySpan.innerText = timeLeft.toFixed(1);
+                // 音效：倒计时紧迫感
+                if (soundEnabled && audioCtx && isAudioUnlocked) {
+                    if (timeLeft <= 1.2 && timeLeft > 0) {
+                        playUrgentTick();
+                    } else if (timeLeft <= 2.5 && Math.random() < 0.3) {
+                        playSoftTick();
+                    }
+                }
+            }
+        }, 100);
+    }
+
+    function handleTimeout() {
+        if (waitingNext) return;
+        waitingNext = true;
+        canAnswer = false;
+        breakCombo();
+        setFeedbackMsg(`超时！ “${currentQuestion.ganzhi}” 未作答，连击中断`, false);
+        if (soundEnabled && audioCtx && isAudioUnlocked) playErrorSound();
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+        nextQuestionTimeout = setTimeout(() => {
+            loadNextQuestion();
+        }, 1200);
+    }
+
+    function handleAnswer(selectedReal) {
+        if (!canAnswer || waitingNext) return;
+        const isCorrect = (selectedReal === currentQuestion.isReal);
+        canAnswer = false;
+        waitingNext = true;
+        stopTimer();
+
+        if (isCorrect) {
+            combo++;
+            updateStatsUI();
+            setFeedbackMsg(`正确！ “${currentQuestion.ganzhi}” 为【${currentQuestion.isReal ? '实' : '虚'}】 连击×${combo}`, true);
+            if (soundEnabled && audioCtx && isAudioUnlocked) playCorrectSound();
+        } else {
+            breakCombo();
+            setFeedbackMsg(`错误！ “${currentQuestion.ganzhi}” 应为【${currentQuestion.isReal ? '实' : '虚'}】，连击清零`, false);
+            if (soundEnabled && audioCtx && isAudioUnlocked) playErrorSound();
+        }
+
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+        nextQuestionTimeout = setTimeout(() => {
+            loadNextQuestion();
+        }, 1300);
+    }
+
+    function loadNextQuestion() {
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+        waitingNext = false;
+        canAnswer = true;
+        currentQuestion = getRandomQuestion();
+        ganzhiElem.innerText = currentQuestion.ganzhi;
+        stopTimer();
+        startCountdown();
+        setFeedbackMsg(`新题目: ${currentQuestion.ganzhi} 选择虚实`, false, true);
+    }
+
+    function setFeedbackMsg(msg, isCorrect, isNeutral = false) {
+        feedbackDiv.innerHTML = msg;
+        if (isNeutral) {
+            feedbackDiv.className = "feedback-area feedback-neutral";
+        } else if (isCorrect) {
+            feedbackDiv.className = "feedback-area feedback-correct";
+        } else {
+            feedbackDiv.className = "feedback-area feedback-wrong";
+        }
+    }
+
+    // ---------- 音效系统 (复刻拖拽版) ----------
     function initAudio() {
         if (audioCtx) return;
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-
-    // 滴答声（柔和但清晰）
-    function playTick() {
-        if (!soundEnabled || !audioCtx) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
-        osc.start();
-        osc.stop(now + 0.15);
-    }
-
-    // 急促的压迫闹钟（3秒内多次，更急促）
-    function playUrgentAlarm() {
-        if (!soundEnabled || !audioCtx) return;
-        const now = audioCtx.currentTime;
-        // 双频交替，极短促
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.frequency.value = 1200;
-        gain1.gain.setValueAtTime(0.22, now);
-        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-        osc1.start();
-        osc1.stop(now + 0.12);
-
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.value = 1600;
-        gain2.gain.setValueAtTime(0.22, now + 0.1);
-        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
-        osc2.start(now + 0.1);
-        osc2.stop(now + 0.22);
-
-        const osc3 = audioCtx.createOscillator();
-        const gain3 = audioCtx.createGain();
-        osc3.connect(gain3);
-        gain3.connect(audioCtx.destination);
-        osc3.frequency.value = 2000;
-        gain3.gain.setValueAtTime(0.18, now + 0.2);
-        gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
-        osc3.start(now + 0.2);
-        osc3.stop(now + 0.32);
-    }
-
     function unlockAudio() {
         if (audioCtx && !isAudioUnlocked) {
             audioCtx.resume().then(() => { isAudioUnlocked = true; });
@@ -523,256 +654,123 @@
             audioCtx.resume().then(() => { isAudioUnlocked = true; });
         }
     }
+    function playCorrectSound() {
+        if (!soundEnabled || !audioCtx || !isAudioUnlocked) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+        osc.start();
+        osc.stop(now + 0.3);
+    }
+    function playErrorSound() {
+        if (!soundEnabled || !audioCtx || !isAudioUnlocked) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 520;
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        osc.start();
+        osc.stop(now + 0.35);
+    }
+    function playSoftTick() {
+        if (!soundEnabled || !audioCtx || !isAudioUnlocked) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 1200;
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+        osc.start();
+        osc.stop(now + 0.1);
+    }
+    function playUrgentTick() {
+        if (!soundEnabled || !audioCtx || !isAudioUnlocked) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 1800;
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+        osc.start();
+        osc.stop(now + 0.08);
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 2100;
+        gain2.gain.setValueAtTime(0.12, now + 0.08);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+        osc2.start(now + 0.08);
+        osc2.stop(now + 0.16);
+    }
 
-    const soundToggleSmall = document.getElementById('soundToggleSmall');
-    soundToggleSmall.addEventListener('click', () => {
+    // ---------- 重置游戏 ----------
+    function resetGame() {
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+        stopTimer();
+        waitingNext = false;
+        canAnswer = true;
+        combo = 0;
+        maxComboThisSession = 0;
+        updateStatsUI();
+        currentQuestion = getRandomQuestion();
+        ganzhiElem.innerText = currentQuestion.ganzhi;
+        setFeedbackMsg(`游戏已重置！请判断 “${currentQuestion.ganzhi}”`, false, true);
+        startCountdown();
+        saveRank(currentUserNick, 0);
+    }
+
+    // ---------- 事件绑定 ----------
+    realBtn.addEventListener('click', () => handleAnswer(true));
+    virtualBtn.addEventListener('click', () => handleAnswer(false));
+    resetBtn.addEventListener('click', resetGame);
+    studyEndBtn.addEventListener('click', () => {
+        // 先学到这：跳转结算页面显示排行榜
+        showRankModal();
+    });
+    soundToggleBtn.addEventListener('click', () => {
         soundEnabled = !soundEnabled;
-        soundToggleSmall.innerHTML = soundEnabled ? "🔊 音效 ON" : "🔇 音效 OFF";
+        soundToggleBtn.innerHTML = soundEnabled ? "音效 ON" : "音效 OFF";
         if (soundEnabled && !audioCtx) initAudio();
         if (soundEnabled && audioCtx && audioCtx.state !== 'running') unlockAudio();
     });
+    openRankBtn.addEventListener('click', showRankModal);
+    document.getElementById('closeRankBtn').addEventListener('click', closeRankModal);
 
-    // 动态限时：每答对3次减少0.5秒，最低3秒，初始5秒
-    function updateDynamicTimeLimit() {
-        let newLimit = 5 - Math.floor(correctTotal / 3) * 0.5;
-        if (newLimit < 3) newLimit = 3;
-        dynamicTimeLimit = Math.round(newLimit * 10) / 10;
-        return dynamicTimeLimit;
-    }
-
-    function clearAllTimers() {
-        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-        if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
-        if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
-    }
-
-    function updateTimerUI() {
-        const timerElem = document.getElementById('timerDisplay');
-        if (timerElem) timerElem.innerText = Math.ceil(currentTimeLeft);
-    }
-
-    function startCountdown() {
-        if (answered) return;
-        clearAllTimers();
-        currentTimeLeft = dynamicTimeLimit;
-        updateTimerUI();
-
-        timerInterval = setInterval(() => {
-            if (answered) return;
-            if (currentTimeLeft <= 0) {
-                if (!answered) {
-                    clearInterval(timerInterval);
-                    handleTimeoutExpired();
-                }
-                return;
-            }
-            currentTimeLeft--;
-            updateTimerUI();
-
-            if (soundEnabled && audioCtx && isAudioUnlocked) {
-                playTick();
-                // 剩余 <= 3 秒时 额外播放急促闹钟（每秒钟都补压迫音）
-                if (currentTimeLeft <= 3 && currentTimeLeft > 0) {
-                    playUrgentAlarm();
-                }
-            }
-        }, 1000);
-
-        currentTimeout = setTimeout(() => {
-            if (!answered) {
-                handleTimeoutExpired();
-            }
-        }, dynamicTimeLimit * 1000);
-    }
-
-    function handleTimeoutExpired() {
-        if (answered) return;
-        answered = true;
-        clearAllTimers();
-        answeredTotal++;
-        updateScoreUI();
-        const answerType = currentQuestion.isReal ? "实" : "虚";
-        const gz = currentQuestion.ganzhi;
-        setFeedback(`⏰ 超时！ "${gz}" 为【${answerType}】。`, false);
-        document.getElementById('realBtn').disabled = true;
-        document.getElementById('virtualBtn').disabled = true;
-        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
-        nextQuestionTimeout = setTimeout(() => {
-            loadNextQuestion();
-        }, 1200);
-    }
-
-    function handleAnswer(selectedReal) {
-        if (answered) return;
-        if (!currentQuestion) return;
+    // 首次交互解锁音频
+    function unlockOnFirstInteraction() {
         unlockAudio();
-        const isCorrect = (selectedReal === currentQuestion.isReal);
-        answered = true;
-        clearAllTimers();
-        answeredTotal++;
-        if (isCorrect) {
-            correctTotal++;
-            updateDynamicTimeLimit();
-            const gz = currentQuestion.ganzhi;
-            const correctType = currentQuestion.isReal ? "实" : "虚";
-            setFeedback(`✅ "${gz}" 为【${correctType}】。`, true);
-            if (soundEnabled && audioCtx && isAudioUnlocked) {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.frequency.value = 1318.52;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
-            }
-            nextQuestionTimeout = setTimeout(() => {
-                loadNextQuestion();
-            }, 2000);
-        } else {
-            const gz = currentQuestion.ganzhi;
-            const correctType = currentQuestion.isReal ? "实" : "虚";
-            setFeedback(`❌ "${gz}" 为【${correctType}】。`, false);
-            if (soundEnabled && audioCtx && isAudioUnlocked) {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.frequency.value = 440;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            }
-            nextQuestionTimeout = setTimeout(() => {
-                loadNextQuestion();
-            }, 1200);
-        }
-        updateScoreUI();
-        document.getElementById('realBtn').disabled = true;
-        document.getElementById('virtualBtn').disabled = true;
+        document.body.removeEventListener('click', unlockOnFirstInteraction);
+        document.body.removeEventListener('touchstart', unlockOnFirstInteraction);
     }
+    document.body.addEventListener('click', unlockOnFirstInteraction);
+    document.body.addEventListener('touchstart', unlockOnFirstInteraction);
 
-    function setFeedback(msg, isCorrect) {
-        const fb = document.getElementById('feedbackMsg');
-        fb.innerHTML = msg;
-        fb.className = `feedback-area ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
-    }
-
-    function updateScoreUI() {
-        document.getElementById('correctCount').innerText = correctTotal;
-        document.getElementById('answeredCount').innerText = answeredTotal;
-        updateDynamicTimeLimit();
-    }
-
-    function loadNextQuestion() {
-        clearAllTimers();
-        const rand = Math.floor(Math.random() * questionBank.length);
-        currentQuestion = { ...questionBank[rand] };
-        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
-        answered = false;
-        document.getElementById('realBtn').disabled = false;
-        document.getElementById('virtualBtn').disabled = false;
-        const fb = document.getElementById('feedbackMsg');
-        fb.innerHTML = "⚡ 限时挑战，快速判断虚实 ⚡";
-        fb.className = "feedback-area";
-        updateDynamicTimeLimit();
-        startCountdown();
-    }
-
-    function resetGame() {
-        clearAllTimers();
-        correctTotal = 0;
-        answeredTotal = 0;
-        updateScoreUI();
-        updateDynamicTimeLimit();  // 重置为5秒
-        const rand = Math.floor(Math.random() * questionBank.length);
-        currentQuestion = { ...questionBank[rand] };
-        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
-        answered = false;
-        document.getElementById('realBtn').disabled = false;
-        document.getElementById('virtualBtn').disabled = false;
-        document.getElementById('feedbackMsg').innerHTML = "✨ 已重置，重新开始试炼 ✨";
-        document.getElementById('feedbackMsg').className = "feedback-area";
-        startCountdown();
-    }
-
-    // ---------- 排行榜 & 结算 ----------
-    let currentUserNick = localStorage.getItem('userNick') || "修行者";
-    let rankData = JSON.parse(localStorage.getItem('ganzhiRank')) || [];
-    function saveRank(nick, score) {
-        rankData.push({ nick: nick, score: score, date: Date.now() });
-        rankData.sort((a,b) => b.score - a.score);
-        if (rankData.length > 10) rankData = rankData.slice(0,10);
-        localStorage.setItem('ganzhiRank', JSON.stringify(rankData));
-    }
-    function showRankingModal(isFinalSubmit = true, finalScore = null) {
-        const modal = document.getElementById('rankingModal');
-        const rankContainer = document.getElementById('rankListContainer');
-        rankData.sort((a,b)=>b.score - a.score);
-        if (rankData.length === 0) rankContainer.innerHTML = '<div class="rank-item">暂无记录，成为第一吧！</div>';
-        else {
-            rankContainer.innerHTML = rankData.map((entry, idx) => `<div class="rank-item"><span>${idx+1}. ${escapeHtml(entry.nick)}</span><span>⚡ ${entry.score}分</span></div>`).join('');
-        }
-        const nicknameInput = document.getElementById('nicknameInput');
-        nicknameInput.value = currentUserNick;
-        modal.style.display = 'flex';
-        if (isFinalSubmit && finalScore !== undefined) {
-            if (!window._hasSavedThisSession) {
-                saveRank(currentUserNick, correctTotal);
-                window._hasSavedThisSession = true;
-                rankData.sort((a,b)=>b.score - a.score);
-                rankContainer.innerHTML = rankData.map((entry, idx) => `<div class="rank-item"><span>${idx+1}. ${escapeHtml(entry.nick)}</span><span>⚡ ${entry.score}分</span></div>`).join('');
-            }
-        }
-    }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
-    function closeModal() { document.getElementById('rankingModal').style.display = 'none'; }
-
-    const studyEndBtn = document.getElementById('studyEndBtn');
-    studyEndBtn.addEventListener('click', () => {
-        if (audioCtx && audioCtx.state !== 'running') unlockAudio();
-        clearAllTimers();
-        let nick = localStorage.getItem('userNick') || "修行者";
-        saveRank(nick, correctTotal);
-        window._hasSavedThisSession = true;
-        showRankingModal(true, correctTotal);
-    });
-
-    document.getElementById('closeRankingBtn').addEventListener('click', () => {
-        const newNick = document.getElementById('nicknameInput').value.trim();
-        if (newNick !== "") {
-            currentUserNick = newNick;
-            localStorage.setItem('userNick', currentUserNick);
-        }
-        closeModal();
-        if (!answered && currentQuestion) {
-            if (!timerInterval && !answered) startCountdown();
-        } else {
-            loadNextQuestion();
-        }
-    });
-
-    document.getElementById('resetBtn').addEventListener('click', () => {
-        clearAllTimers();
-        resetGame();
-    });
-    document.getElementById('realBtn').addEventListener('click', () => handleAnswer(true));
-    document.getElementById('virtualBtn').addEventListener('click', () => handleAnswer(false));
-
+    // 初始化游戏
     function init() {
         initAudio();
-        const rand = Math.floor(Math.random() * questionBank.length);
-        currentQuestion = { ...questionBank[rand] };
-        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
-        answered = false;
-        dynamicTimeLimit = 5;
-        updateDynamicTimeLimit();  // 基于正确数调整，但初始0正确就是5
+        currentQuestion = getRandomQuestion();
+        ganzhiElem.innerText = currentQuestion.ganzhi;
+        combo = 0;
+        maxComboThisSession = 0;
+        updateStatsUI();
         startCountdown();
-        updateScoreUI();
-        rankData = JSON.parse(localStorage.getItem('ganzhiRank')) || [];
+        setFeedbackMsg(`判断 “${currentQuestion.ganzhi}” 虚实，连击加成`, false, true);
+        rankData = JSON.parse(localStorage.getItem('comboRank')) || [];
         currentUserNick = localStorage.getItem('userNick') || "修行者";
+        updateRankingUI();
     }
     init();
 </script>
