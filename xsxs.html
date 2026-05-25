@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>时空能量课堂 · 干支虚实挑战</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f8f1e2;  /* 暖米色背景 */
+            background-image: radial-gradient(circle at 10% 20%, rgba(230, 210, 170, 0.2) 2%, transparent 2.5%),
+                              radial-gradient(circle at 80% 70%, rgba(200, 170, 120, 0.15) 1.5%, transparent 2%);
+            background-size: 40px 40px, 32px 32px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', system-ui, -apple-system, sans-serif;
+            padding: 16px;
+            margin: 0;
+        }
+
+        /* 主卡片 - 淡米色纸质风格 */
+        .game-container {
+            background: #fffcf5;
+            max-width: 680px;
+            width: 100%;
+            border-radius: 56px;
+            box-shadow: 0 20px 35px rgba(120, 80, 40, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #f0e2cf;
+            transition: all 0.2s;
+        }
+
+        /* 标题区 - 古风暖色 */
+        .game-header {
+            background: #f3ebd8;
+            padding: 1.2rem 1rem 0.8rem;
+            text-align: center;
+            border-bottom: 2px solid #e2cfaa;
+        }
+        .game-header h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: 700;
+            color: #a5673f;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 0 #fef5e6;
+        }
+        .game-header .sub {
+            font-size: 0.75rem;
+            color: #b88b5a;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        /* 计分栏 + 音效开关同行，右对齐 */
+        .score-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #f9f2e4;
+            border-bottom: 1px solid #e8d9c4;
+        }
+        .stats {
+            display: flex;
+            gap: 16px;
+        }
+        .score-box, .total-box {
+            background: #ede3cf;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #785a3a;
+            font-size: 0.9rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 1px 2px rgba(255,245,220,0.8);
+        }
+        .score-box span, .total-box span {
+            color: #c27e4a;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-left: 6px;
+        }
+        .sound-toggle-small {
+            background: #e5d5bc;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6b4c2c;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .sound-toggle-small:hover {
+            background: #dac7a8;
+            transform: scale(0.96);
+        }
+
+        /* 计时器圆形 */
+        .timer-area {
+            display: flex;
+            justify-content: center;
+            margin: 15px 20px 5px;
+        }
+        .timer-circle {
+            background: #f7efdf;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #dcb985;
+            box-shadow: 0 6px 12px rgba(100, 60, 20, 0.1);
+        }
+        .timer-seconds {
+            font-size: 2.1rem;
+            font-weight: bold;
+            font-family: monospace;
+            color: #a5682c;
+            line-height: 1;
+        }
+        .timer-label {
+            font-size: 0.6rem;
+            color: #b47c48;
+        }
+
+        /* 答题区域 */
+        .quiz-area {
+            padding: 5px 20px 20px;
+            text-align: center;
+        }
+        .ganzhi-display {
+            background: #fef8ef;
+            border-radius: 64px;
+            margin: 10px 10px 20px;
+            padding: 25px 10px;
+            box-shadow: inset 0 1px 4px #ffe8cf, 0 10px 18px rgba(80, 50, 20, 0.08);
+            border: 1px solid #eedbbc;
+        }
+        .ganzhi-text {
+            font-size: clamp(3rem, 12vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: 8px;
+            font-family: 'Segoe UI', 'Noto Serif CJK SC', '华文楷书', serif;
+            color: #bc7a3c;
+            text-shadow: 2px 2px 0 #f3e2ca;
+        }
+        .game-title-tag {
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: #efe2cf;
+            display: inline-block;
+            padding: 5px 22px;
+            border-radius: 60px;
+            margin-bottom: 12px;
+            color: #8b5a36;
+            box-shadow: inset 0 0 0 1px #fff9ef, 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 虚实按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0 15px;
+            flex-wrap: wrap;
+        }
+        .btn-real, .btn-virtual {
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.1s linear;
+            font-family: inherit;
+            letter-spacing: 4px;
+            box-shadow: 0 5px 0 rgba(100, 60, 20, 0.2);
+            min-width: 130px;
+        }
+        .btn-real {
+            background: #c9ab7b;
+            color: #2d2b1f;
+            border-bottom: 3px solid #9b6e42;
+        }
+        .btn-real:hover:not(:disabled) {
+            background: #dabb97;
+            transform: translateY(-2px);
+        }
+        .btn-virtual {
+            background: #dbbc91;
+            color: #3e2a1a;
+            border-bottom: 3px solid #aa7c4a;
+        }
+        .btn-virtual:hover:not(:disabled) {
+            background: #e7ceaa;
+            transform: translateY(-2px);
+        }
+        .btn-real:disabled, .btn-virtual:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        /* 反馈简洁条 */
+        .feedback-area {
+            background: #f3eadc;
+            margin: 10px 16px;
+            padding: 12px;
+            border-radius: 48px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            color: #5e3e24;
+            min-height: 70px;
+            transition: 0.1s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px white;
+        }
+        .feedback-correct {
+            background: #dee5bf;
+            border-left: 6px solid #7faa5a;
+            color: #3b5c1e;
+        }
+        .feedback-wrong {
+            background: #f3dfcf;
+            border-left: 6px solid #d9986a;
+            color: #aa5a2c;
+        }
+
+        /* 底部按钮组 */
+        .control-group {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin: 8px 20px 24px;
+            flex-wrap: wrap;
+        }
+        .reset-btn, .study-end-btn {
+            background: #e7dac8;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #6b4b2a;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .reset-btn:hover, .study-end-btn:hover {
+            background: #dacdaf;
+            transform: scale(0.97);
+        }
+
+        .footer-note {
+            background: #f6efdf;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #b28b5e;
+            border-top: 1px solid #eddbba;
+        }
+
+        /* 模态框排行榜 - 温暖色调 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(70, 45, 25, 0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-card {
+            background: #fff7ed;
+            max-width: 360px;
+            width: 85%;
+            border-radius: 48px;
+            padding: 24px 20px;
+            text-align: center;
+            border: 1px solid #e5cfb0;
+            color: #563e26;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+        }
+        .modal-card h3 {
+            font-size: 1.8rem;
+            margin: 0 0 12px;
+            color: #b87a44;
+        }
+        .rank-list {
+            text-align: left;
+            margin: 20px 0;
+            max-height: 260px;
+            overflow-y: auto;
+            background: #fcf3e6;
+            border-radius: 32px;
+            padding: 8px 12px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 6px;
+            border-bottom: 1px solid #eedfcb;
+            font-size: 0.9rem;
+        }
+        .nickname-input {
+            padding: 12px;
+            width: 85%;
+            border-radius: 60px;
+            border: 1px solid #dfcbad;
+            background: #fffcf5;
+            color: #4f351f;
+            text-align: center;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+        .modal-close-btn {
+            background: #ddc7a4;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #4c351c;
+        }
+
+        /* 手机适配优化 */
+        @media (max-width: 550px) {
+            .game-container {
+                border-radius: 36px;
+            }
+            .btn-real, .btn-virtual {
+                font-size: 1.3rem;
+                padding: 8px 18px;
+                min-width: 110px;
+            }
+            .ganzhi-text {
+                letter-spacing: 4px;
+            }
+            .timer-circle {
+                width: 60px;
+                height: 60px;
+            }
+            .timer-seconds {
+                font-size: 1.7rem;
+            }
+            .stats {
+                gap: 8px;
+            }
+            .score-box, .total-box {
+                padding: 2px 10px;
+                font-size: 0.75rem;
+            }
+            .score-box span, .total-box span {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameApp">
+    <div class="game-header">
+        <h1>⚡ 时空能量课堂 · 虚实虚实 ⚡</h1>
+        <div class="sub">天干通根为【实】 · 无根虚浮为【虚】</div>
+    </div>
+
+    <div class="score-panel">
+        <div class="stats">
+            <div class="score-box">✅ 能量积分 <span id="correctCount">0</span></div>
+            <div class="total-box">📊 挑战次数 <span id="answeredCount">0</span></div>
+        </div>
+        <button class="sound-toggle-small" id="soundToggleSmall">🔊 音效 ON</button>
+    </div>
+
+    <div class="timer-area">
+        <div class="timer-circle">
+            <div class="timer-seconds" id="timerDisplay">5</div>
+            <div class="timer-label">秒</div>
+        </div>
+    </div>
+
+    <div class="quiz-area">
+        <div class="game-title-tag">🔮 此干支是【实】还是【虚】？ 🔮</div>
+        <div class="ganzhi-display">
+            <div class="ganzhi-text" id="currentGanZhi">甲子</div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-real" id="realBtn">实 🌳</button>
+            <button class="btn-virtual" id="virtualBtn">虚 ☁️</button>
+        </div>
+        <div class="feedback-area" id="feedbackMsg">
+            ✨ 限时判断，答对自动加速挑战 ✨
+        </div>
+    </div>
+
+    <div class="control-group">
+        <button class="reset-btn" id="resetBtn">🔄 重置游戏</button>
+        <button class="study-end-btn" id="studyEndBtn">📚 就学到这</button>
+    </div>
+    <div class="footer-note">
+        🌟 限时挑战 | 初始5秒，每对3题加速 (最低3秒)
+    </div>
+</div>
+
+<!-- 结算排行榜模态框 -->
+<div id="rankingModal" class="modal">
+    <div class="modal-card">
+        <h3>🏆 能量排行榜 🏆</h3>
+        <div id="rankListContainer" class="rank-list">加载中...</div>
+        <div>
+            <input type="text" id="nicknameInput" class="nickname-input" placeholder="输入昵称登榜" maxlength="12">
+        </div>
+        <button id="closeRankingBtn" class="modal-close-btn">继续修行</button>
+    </div>
+</div>
+
+<script>
+    // ---------- 虚实题库 ----------
+    const realList = [
+        "甲寅", "甲辰", "甲子", "乙亥", "乙卯", "乙未", "丙寅", "丙午", "丙戌",
+        "丁巳", "丁卯", "丁未", "戊戌", "戊午", "戊辰", "己巳", "己未", "己丑",
+        "庚申", "庚辰", "辛丑", "辛酉", "壬申", "壬子", "壬辰", "癸亥", "癸酉", "癸丑"
+    ];
+    const virtualList = [
+        "甲申", "甲戌", "甲午", "乙巳", "乙酉", "乙丑", "丙子", "丙申", "丙辰",
+        "丁亥", "丁丑", "丁酉", "戊子", "戊申", "戊寅", "己亥", "己酉", "己卯",
+        "庚子", "庚午", "庚寅", "庚戌", "辛巳", "辛亥", "辛未", "辛卯",
+        "壬戌", "壬午", "壬寅", "癸巳", "癸未", "癸卯"
+    ];
+    let questionBank = [];
+    realList.forEach(g => questionBank.push({ ganzhi: g, isReal: true }));
+    virtualList.forEach(g => questionBank.push({ ganzhi: g, isReal: false }));
+
+    // ----- 游戏状态 -----
+    let currentQuestion = null;
+    let answered = false;
+    let correctTotal = 0;
+    let answeredTotal = 0;
+    let currentTimeout = null;
+    let nextQuestionTimeout = null;
+    let currentTimeLeft = 5;
+    let timerInterval = null;
+    let dynamicTimeLimit = 5;      // 初始5秒，最低3秒
+
+    // 音效
+    let soundEnabled = true;
+    let audioCtx = null;
+    let isAudioUnlocked = false;
+
+    function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // 滴答声（柔和但清晰）
+    function playTick() {
+        if (!soundEnabled || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+        osc.start();
+        osc.stop(now + 0.15);
+    }
+
+    // 急促的压迫闹钟（3秒内多次，更急促）
+    function playUrgentAlarm() {
+        if (!soundEnabled || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        // 双频交替，极短促
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.frequency.value = 1200;
+        gain1.gain.setValueAtTime(0.22, now);
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        osc1.start();
+        osc1.stop(now + 0.12);
+
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 1600;
+        gain2.gain.setValueAtTime(0.22, now + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+        osc2.start(now + 0.1);
+        osc2.stop(now + 0.22);
+
+        const osc3 = audioCtx.createOscillator();
+        const gain3 = audioCtx.createGain();
+        osc3.connect(gain3);
+        gain3.connect(audioCtx.destination);
+        osc3.frequency.value = 2000;
+        gain3.gain.setValueAtTime(0.18, now + 0.2);
+        gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+        osc3.start(now + 0.2);
+        osc3.stop(now + 0.32);
+    }
+
+    function unlockAudio() {
+        if (audioCtx && !isAudioUnlocked) {
+            audioCtx.resume().then(() => { isAudioUnlocked = true; });
+        } else if (!audioCtx) {
+            initAudio();
+            audioCtx.resume().then(() => { isAudioUnlocked = true; });
+        }
+    }
+
+    const soundToggleSmall = document.getElementById('soundToggleSmall');
+    soundToggleSmall.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        soundToggleSmall.innerHTML = soundEnabled ? "🔊 音效 ON" : "🔇 音效 OFF";
+        if (soundEnabled && !audioCtx) initAudio();
+        if (soundEnabled && audioCtx && audioCtx.state !== 'running') unlockAudio();
+    });
+
+    // 动态限时：每答对3次减少0.5秒，最低3秒，初始5秒
+    function updateDynamicTimeLimit() {
+        let newLimit = 5 - Math.floor(correctTotal / 3) * 0.5;
+        if (newLimit < 3) newLimit = 3;
+        dynamicTimeLimit = Math.round(newLimit * 10) / 10;
+        return dynamicTimeLimit;
+    }
+
+    function clearAllTimers() {
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+        if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
+        if (nextQuestionTimeout) { clearTimeout(nextQuestionTimeout); nextQuestionTimeout = null; }
+    }
+
+    function updateTimerUI() {
+        const timerElem = document.getElementById('timerDisplay');
+        if (timerElem) timerElem.innerText = Math.ceil(currentTimeLeft);
+    }
+
+    function startCountdown() {
+        if (answered) return;
+        clearAllTimers();
+        currentTimeLeft = dynamicTimeLimit;
+        updateTimerUI();
+
+        timerInterval = setInterval(() => {
+            if (answered) return;
+            if (currentTimeLeft <= 0) {
+                if (!answered) {
+                    clearInterval(timerInterval);
+                    handleTimeoutExpired();
+                }
+                return;
+            }
+            currentTimeLeft--;
+            updateTimerUI();
+
+            if (soundEnabled && audioCtx && isAudioUnlocked) {
+                playTick();
+                // 剩余 <= 3 秒时 额外播放急促闹钟（每秒钟都补压迫音）
+                if (currentTimeLeft <= 3 && currentTimeLeft > 0) {
+                    playUrgentAlarm();
+                }
+            }
+        }, 1000);
+
+        currentTimeout = setTimeout(() => {
+            if (!answered) {
+                handleTimeoutExpired();
+            }
+        }, dynamicTimeLimit * 1000);
+    }
+
+    function handleTimeoutExpired() {
+        if (answered) return;
+        answered = true;
+        clearAllTimers();
+        answeredTotal++;
+        updateScoreUI();
+        const answerType = currentQuestion.isReal ? "实" : "虚";
+        const gz = currentQuestion.ganzhi;
+        setFeedback(`⏰ 超时！ "${gz}" 为【${answerType}】。`, false);
+        document.getElementById('realBtn').disabled = true;
+        document.getElementById('virtualBtn').disabled = true;
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
+        nextQuestionTimeout = setTimeout(() => {
+            loadNextQuestion();
+        }, 1200);
+    }
+
+    function handleAnswer(selectedReal) {
+        if (answered) return;
+        if (!currentQuestion) return;
+        unlockAudio();
+        const isCorrect = (selectedReal === currentQuestion.isReal);
+        answered = true;
+        clearAllTimers();
+        answeredTotal++;
+        if (isCorrect) {
+            correctTotal++;
+            updateDynamicTimeLimit();
+            const gz = currentQuestion.ganzhi;
+            const correctType = currentQuestion.isReal ? "实" : "虚";
+            setFeedback(`✅ "${gz}" 为【${correctType}】。`, true);
+            if (soundEnabled && audioCtx && isAudioUnlocked) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 1318.52;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+            nextQuestionTimeout = setTimeout(() => {
+                loadNextQuestion();
+            }, 2000);
+        } else {
+            const gz = currentQuestion.ganzhi;
+            const correctType = currentQuestion.isReal ? "实" : "虚";
+            setFeedback(`❌ "${gz}" 为【${correctType}】。`, false);
+            if (soundEnabled && audioCtx && isAudioUnlocked) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 440;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            }
+            nextQuestionTimeout = setTimeout(() => {
+                loadNextQuestion();
+            }, 1200);
+        }
+        updateScoreUI();
+        document.getElementById('realBtn').disabled = true;
+        document.getElementById('virtualBtn').disabled = true;
+    }
+
+    function setFeedback(msg, isCorrect) {
+        const fb = document.getElementById('feedbackMsg');
+        fb.innerHTML = msg;
+        fb.className = `feedback-area ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
+    }
+
+    function updateScoreUI() {
+        document.getElementById('correctCount').innerText = correctTotal;
+        document.getElementById('answeredCount').innerText = answeredTotal;
+        updateDynamicTimeLimit();
+    }
+
+    function loadNextQuestion() {
+        clearAllTimers();
+        const rand = Math.floor(Math.random() * questionBank.length);
+        currentQuestion = { ...questionBank[rand] };
+        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
+        answered = false;
+        document.getElementById('realBtn').disabled = false;
+        document.getElementById('virtualBtn').disabled = false;
+        const fb = document.getElementById('feedbackMsg');
+        fb.innerHTML = "⚡ 限时挑战，快速判断虚实 ⚡";
+        fb.className = "feedback-area";
+        updateDynamicTimeLimit();
+        startCountdown();
+    }
+
+    function resetGame() {
+        clearAllTimers();
+        correctTotal = 0;
+        answeredTotal = 0;
+        updateScoreUI();
+        updateDynamicTimeLimit();  // 重置为5秒
+        const rand = Math.floor(Math.random() * questionBank.length);
+        currentQuestion = { ...questionBank[rand] };
+        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
+        answered = false;
+        document.getElementById('realBtn').disabled = false;
+        document.getElementById('virtualBtn').disabled = false;
+        document.getElementById('feedbackMsg').innerHTML = "✨ 已重置，重新开始试炼 ✨";
+        document.getElementById('feedbackMsg').className = "feedback-area";
+        startCountdown();
+    }
+
+    // ---------- 排行榜 & 结算 ----------
+    let currentUserNick = localStorage.getItem('userNick') || "修行者";
+    let rankData = JSON.parse(localStorage.getItem('ganzhiRank')) || [];
+    function saveRank(nick, score) {
+        rankData.push({ nick: nick, score: score, date: Date.now() });
+        rankData.sort((a,b) => b.score - a.score);
+        if (rankData.length > 10) rankData = rankData.slice(0,10);
+        localStorage.setItem('ganzhiRank', JSON.stringify(rankData));
+    }
+    function showRankingModal(isFinalSubmit = true, finalScore = null) {
+        const modal = document.getElementById('rankingModal');
+        const rankContainer = document.getElementById('rankListContainer');
+        rankData.sort((a,b)=>b.score - a.score);
+        if (rankData.length === 0) rankContainer.innerHTML = '<div class="rank-item">暂无记录，成为第一吧！</div>';
+        else {
+            rankContainer.innerHTML = rankData.map((entry, idx) => `<div class="rank-item"><span>${idx+1}. ${escapeHtml(entry.nick)}</span><span>⚡ ${entry.score}分</span></div>`).join('');
+        }
+        const nicknameInput = document.getElementById('nicknameInput');
+        nicknameInput.value = currentUserNick;
+        modal.style.display = 'flex';
+        if (isFinalSubmit && finalScore !== undefined) {
+            if (!window._hasSavedThisSession) {
+                saveRank(currentUserNick, correctTotal);
+                window._hasSavedThisSession = true;
+                rankData.sort((a,b)=>b.score - a.score);
+                rankContainer.innerHTML = rankData.map((entry, idx) => `<div class="rank-item"><span>${idx+1}. ${escapeHtml(entry.nick)}</span><span>⚡ ${entry.score}分</span></div>`).join('');
+            }
+        }
+    }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+    function closeModal() { document.getElementById('rankingModal').style.display = 'none'; }
+
+    const studyEndBtn = document.getElementById('studyEndBtn');
+    studyEndBtn.addEventListener('click', () => {
+        if (audioCtx && audioCtx.state !== 'running') unlockAudio();
+        clearAllTimers();
+        let nick = localStorage.getItem('userNick') || "修行者";
+        saveRank(nick, correctTotal);
+        window._hasSavedThisSession = true;
+        showRankingModal(true, correctTotal);
+    });
+
+    document.getElementById('closeRankingBtn').addEventListener('click', () => {
+        const newNick = document.getElementById('nicknameInput').value.trim();
+        if (newNick !== "") {
+            currentUserNick = newNick;
+            localStorage.setItem('userNick', currentUserNick);
+        }
+        closeModal();
+        if (!answered && currentQuestion) {
+            if (!timerInterval && !answered) startCountdown();
+        } else {
+            loadNextQuestion();
+        }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        clearAllTimers();
+        resetGame();
+    });
+    document.getElementById('realBtn').addEventListener('click', () => handleAnswer(true));
+    document.getElementById('virtualBtn').addEventListener('click', () => handleAnswer(false));
+
+    function init() {
+        initAudio();
+        const rand = Math.floor(Math.random() * questionBank.length);
+        currentQuestion = { ...questionBank[rand] };
+        document.getElementById('currentGanZhi').innerText = currentQuestion.ganzhi;
+        answered = false;
+        dynamicTimeLimit = 5;
+        updateDynamicTimeLimit();  // 基于正确数调整，但初始0正确就是5
+        startCountdown();
+        updateScoreUI();
+        rankData = JSON.parse(localStorage.getItem('ganzhiRank')) || [];
+        currentUserNick = localStorage.getItem('userNick') || "修行者";
+    }
+    init();
+</script>
+</body>
+</html>
