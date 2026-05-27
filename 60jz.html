@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>六十甲子·魔方滑动排序 | 行列滑动整理</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a6b3c 0%, #0c3b21 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Microsoft YaHei', system-ui, sans-serif;
+            padding: 12px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .game-container {
+            background: #2a633b;
+            border-radius: 48px;
+            padding: 16px 20px 24px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5);
+            max-width: 1400px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1d472ecc;
+            backdrop-filter: blur(4px);
+            padding: 8px 18px;
+            border-radius: 60px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ffefb3;
+            text-shadow: 2px 2px 0 #6b3e1a;
+        }
+        .stats {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #1e3a28;
+            padding: 5px 16px;
+            border-radius: 48px;
+            color: #fff0c0;
+        }
+        button {
+            background: #fad284;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.05s;
+            font-family: inherit;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+        .message-area {
+            background: #1b3e28;
+            color: #ffefb9;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 主游戏区域 - 魔方矩阵布局 */
+        .matrix-container {
+            position: relative;
+            margin: 15px 0 10px;
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 使用grid实现箭头+表格完美对齐 */
+        .game-matrix {
+            display: grid;
+            grid-template-columns: 45px repeat(6, 1fr) 45px;
+            grid-auto-rows: auto;
+            align-items: center;
+            gap: 4px;
+            min-width: 580px;
+        }
+
+        /* 顶部占位 + 列上箭头区域 */
+        .corner-tl { grid-column: 1 / 2; grid-row: 1; }
+        .col-up-arrows {
+            grid-column: 2 / 8;
+            grid-row: 1;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .col-up-btn {
+            background: #e9c27c;
+            border-radius: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.05s;
+            font-size: 1rem;
+        }
+        .col-up-btn:active { transform: scale(0.95); background: #f3d38c; }
+
+        /* 左侧行左箭头区域 + 右侧行右箭头区域 与表格行混排 */
+        .row-left-arrows {
+            grid-column: 1 / 2;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .row-left-btn {
+            background: #e9c27c;
+            border-radius: 30px;
+            text-align: center;
+            padding: 12px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.05s;
+            font-size: 1rem;
+        }
+        .row-left-btn:active { transform: scale(0.95); background: #f3d38c; }
+
+        .table-grid {
+            grid-column: 2 / 8;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-rows: auto;
+            gap: 4px;
+            background: #1f543b;
+            padding: 2px;
+            border-radius: 20px;
+        }
+
+        .row-right-arrows {
+            grid-column: 8 / 9;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .row-right-btn {
+            background: #e9c27c;
+            border-radius: 30px;
+            text-align: center;
+            padding: 12px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.05s;
+            font-size: 1rem;
+        }
+        .row-right-btn:active { transform: scale(0.95); background: #f3d38c; }
+
+        /* 底部行: 列下箭头 */
+        .col-down-arrows {
+            grid-column: 2 / 8;
+            grid-row: auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .col-down-btn {
+            background: #e9c27c;
+            border-radius: 30px;
+            text-align: center;
+            padding: 6px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.05s;
+        }
+        .col-down-btn:active { transform: scale(0.95); background: #f3d38c; }
+
+        /* 卡片样式 */
+        .card-cell {
+            background: #fffffa;
+            border-radius: 16px;
+            padding: 10px 4px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid #e0b166;
+            transition: 0.08s linear;
+            cursor: pointer;
+        }
+        .card-cell:active {
+            transform: scale(0.98);
+        }
+        .card-gz {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .card-year {
+            font-size: 0.6rem;
+            color: #2c6e2c;
+        }
+        .nayin-sm {
+            font-size: 0.6rem;
+            background: #f7e9cf;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+        .correct-highlight {
+            background: #e0f5d8;
+            border-color: #4c8b3c;
+            box-shadow: 0 0 0 2px #7eb86a;
+        }
+
+        /* 手机滑动提示气泡 */
+        .swipe-hint {
+            background: #2a482e;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 移动端隐藏箭头？实际保留，但增大触摸区域，同时滑动也生效 */
+        @media (max-width: 750px) {
+            .game-matrix {
+                grid-template-columns: 38px repeat(6, 1fr) 38px;
+                gap: 2px;
+            }
+            .row-left-btn, .row-right-btn {
+                padding: 8px 0;
+                font-size: 0.9rem;
+            }
+            .col-up-btn, .col-down-btn {
+                padding: 4px 0;
+            }
+            .card-gz {
+                font-size: 0.9rem;
+            }
+            .card-year {
+                font-size: 0.5rem;
+            }
+            .nayin-sm {
+                font-size: 0.5rem;
+                padding: 1px 4px;
+            }
+            .game-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .card-gz { font-size: 0.8rem; }
+            .row-left-btn, .row-right-btn { padding: 6px 0; font-size: 0.8rem; }
+        }
+
+        /* 滑动指引醒目 */
+        .touch-tip {
+            background: #f8e0a0;
+            color: #5a3e1a;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="top-bar">
+        <div class="game-title">🀆 六十甲子·魔方滑动排序</div>
+        <div class="stats">
+            <span>✅ 归位: <span id="correctCount">0</span>/60</span>
+            <button id="shuffleBtn">🎲 打乱</button>
+        </div>
+    </div>
+
+    <!-- 游戏矩阵区域 -->
+    <div class="matrix-container" id="matrixContainer">
+        <!-- 动态生成 grid 结构 -->
+    </div>
+
+    <div class="message-area" id="messageArea">
+        <span>📱 手机横向/竖向滑动移动整行列 | 🖱️ 电脑点击箭头移动</span>
+        <span class="swipe-hint">⬅️➡️ 滑动行 &nbsp;&nbsp; ⬆️⬇️ 滑动列</span>
+    </div>
+</div>
+
+<script>
+    // ---------- 六十甲子原始数据 ----------
+    const GAN_ZHI = [
+        "甲子","乙丑","丙寅","丁卯","戊辰","己巳","庚午","辛未","壬申","癸酉",
+        "甲戌","乙亥","丙子","丁丑","戊寅","己卯","庚辰","辛巳","壬午","癸未",
+        "甲申","乙酉","丙戌","丁亥","戊子","己丑","庚寅","辛卯","壬辰","癸巳",
+        "甲午","乙未","丙申","丁酉","戊戌","己亥","庚子","辛丑","壬寅","癸卯",
+        "甲辰","乙巳","丙午","丁未","戊申","己酉","庚戌","辛亥","壬子","癸丑",
+        "甲寅","乙卯","丙辰","丁巳","戊午","己未","庚申","辛酉","壬戌","癸亥"
+    ];
+    const NA_YIN_LIST = [
+        "海中金","海中金","炉中火","炉中火","大林木","大林木","路旁土","路旁土","剑锋金","剑锋金",
+        "山头火","山头火","涧下水","涧下水","城头土","城头土","白蜡金","白蜡金","杨柳木","杨柳木",
+        "泉中水","泉中水","屋上土","屋上土","霹雳火","霹雳火","松柏木","松柏木","长流水","长流水",
+        "沙中金","沙中金","山下火","山下火","平地木","平地木","壁上土","壁上土","金箔金","金箔金",
+        "佛灯火","佛灯火","天河水","天河水","大驿土","大驿土","钗钏金","钗钏金","桑柘木","桑柘木",
+        "大溪水","大溪水","沙中土","沙中土","天上火","天上火","石榴木","石榴木","大海水","大海水"
+    ];
+    const XUN_NAMES = ["甲子旬", "甲戌旬", "甲申旬", "甲午旬", "甲辰旬", "甲寅旬"];
+
+    // 标准网格 (6列10行) 索引: col=0~5, row=0~9
+    let standardGrid = [];
+    for (let col = 0; col < 6; col++) {
+        let column = [];
+        for (let row = 0; row < 10; row++) {
+            let idx = col * 10 + row;
+            column.push({
+                gz: GAN_ZHI[idx],
+                year1: 1984 + idx,
+                year2: 1924 + idx,
+                naYin: NA_YIN_LIST[idx],
+                globalIdx: idx
+            });
+        }
+        standardGrid.push(column);
+    }
+
+    // 当前游戏网格状态 (深拷贝)
+    let currentGrid = [];
+
+    // 初始化当前网格 (默认标准顺序，后续打乱)
+    function initStandard() {
+        currentGrid = [];
+        for (let col = 0; col < 6; col++) {
+            let colArr = [];
+            for (let row = 0; row < 10; row++) {
+                colArr.push({ ...standardGrid[col][row] });
+            }
+            currentGrid.push(colArr);
+        }
+    }
+
+    // 打乱算法 (随机行列移动 300~500 次，保证可解)
+    function randomShuffle() {
+        initStandard();
+        const steps = 280 + Math.floor(Math.random() * 200);
+        for (let s = 0; s < steps; s++) {
+            const type = Math.random() > 0.5 ? 'row' : 'col';
+            if (type === 'row') {
+                const row = Math.floor(Math.random() * 10);
+                const dir = Math.random() > 0.5 ? 'left' : 'right';
+                const shift = 1 + Math.floor(Math.random() * 3);
+                moveRow(row, dir, shift);
+            } else {
+                const col = Math.floor(Math.random() * 6);
+                const dir = Math.random() > 0.5 ? 'up' : 'down';
+                const shift = 1 + Math.floor(Math.random() * 3);
+                moveCol(col, dir, shift);
+            }
+        }
+        // 再次渲染
+        renderFullMatrix();
+        updateCorrectCount();
+        checkWin();
+    }
+
+    // ---------- 核心移动逻辑 ----------
+    // 整行向左移动 (循环左移)
+    function moveRow(rowIdx, direction, steps = 1) {
+        if (steps === 0) return;
+        let actualSteps = steps % 6;
+        if (actualSteps === 0) return;
+        let newRow = [];
+        for (let col = 0; col < 6; col++) {
+            newRow.push(currentGrid[col][rowIdx]);
+        }
+        if (direction === 'left') {
+            // 左移：前 actualSteps 个移动到末尾
+            let removed = newRow.splice(0, actualSteps);
+            newRow.push(...removed);
+        } else {
+            // 右移：后 actualSteps 个移动到开头
+            let removed = newRow.splice(-actualSteps);
+            newRow = [...removed, ...newRow];
+        }
+        // 写回各列
+        for (let col = 0; col < 6; col++) {
+            currentGrid[col][rowIdx] = newRow[col];
+        }
+        // 微动画: 高亮行快闪
+        highlightRow(rowIdx);
+    }
+
+    // 整列移动 (循环上移/下移)
+    function moveCol(colIdx, direction, steps = 1) {
+        if (steps === 0) return;
+        let actualSteps = steps % 10;
+        if (actualSteps === 0) return;
+        let newCol = [];
+        for (let row = 0; row < 10; row++) {
+            newCol.push(currentGrid[colIdx][row]);
+        }
+        if (direction === 'up') {
+            let removed = newCol.splice(0, actualSteps);
+            newCol.push(...removed);
+        } else {
+            let removed = newCol.splice(-actualSteps);
+            newCol = [...removed, ...newCol];
+        }
+        for (let row = 0; row < 10; row++) {
+            currentGrid[colIdx][row] = newCol[row];
+        }
+        highlightCol(colIdx);
+    }
+
+    // 高亮反馈 (临时视觉效果)
+    function highlightRow(rowIdx) {
+        const cells = document.querySelectorAll('.card-cell');
+        cells.forEach((cell, idx) => {
+            const row = Math.floor(idx / 6);
+            if (row === rowIdx) {
+                cell.style.transition = '0.08s';
+                cell.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(cell) cell.style.transform = ''; }, 120);
+            }
+        });
+    }
+    function highlightCol(colIdx) {
+        const cells = document.querySelectorAll('.card-cell');
+        cells.forEach((cell, idx) => {
+            const col = idx % 6;
+            if (col === colIdx) {
+                cell.style.transition = '0.08s';
+                cell.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(cell) cell.style.transform = ''; }, 120);
+            }
+        });
+    }
+
+    // 计算正确个数
+    function countCorrect() {
+        let correct = 0;
+        for (let col = 0; col < 6; col++) {
+            for (let row = 0; row < 10; row++) {
+                if (currentGrid[col][row].globalIdx === standardGrid[col][row].globalIdx) {
+                    correct++;
+                }
+            }
+        }
+        return correct;
+    }
+    function updateCorrectCount() {
+        const c = countCorrect();
+        document.getElementById('correctCount').innerText = c;
+        if (c === 60) {
+            setTimeout(() => {
+                alert("🎉 恭喜！六十甲子完美归位！顺序完全正确！🎉");
+                document.getElementById('messageArea').innerHTML = '<span>✨ 胜利！点击打乱继续挑战 ✨</span>';
+            }, 80);
+        }
+        return c;
+    }
+    function checkWin() {
+        if (countCorrect() === 60) {
+            // 胜利信息已弹窗
+        }
+    }
+
+    // 渲染完整矩阵（表格 + 箭头控件）
+    function renderFullMatrix() {
+        const container = document.getElementById('matrixContainer');
+        container.innerHTML = '';
+
+        // 构建整个 game-matrix grid
+        const matrixDiv = document.createElement('div');
+        matrixDiv.className = 'game-matrix';
+
+        // 1. 左上角占位
+        const corner = document.createElement('div');
+        corner.className = 'corner-tl';
+        matrixDiv.appendChild(corner);
+
+        // 2. 列上箭头区域 (6个)
+        const colUpDiv = document.createElement('div');
+        colUpDiv.className = 'col-up-arrows';
+        for (let col = 0; col < 6; col++) {
+            const btn = document.createElement('div');
+            btn.className = 'col-up-btn';
+            btn.innerHTML = '▲';
+            btn.title = `向上移动第${col+1}列`;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                moveCol(col, 'up', 1);
+                renderFullMatrix();
+                updateCorrectCount();
+                checkWin();
+            });
+            colUpDiv.appendChild(btn);
+        }
+        matrixDiv.appendChild(colUpDiv);
+
+        // 3. 左侧行左箭头区域 (10个)
+        const leftArrows = document.createElement('div');
+        leftArrows.className = 'row-left-arrows';
+        for (let row = 0; row < 10; row++) {
+            const btn = document.createElement('div');
+            btn.className = 'row-left-btn';
+            btn.innerHTML = '◀';
+            btn.title = `向左移动第${row+1}行`;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                moveRow(row, 'left', 1);
+                renderFullMatrix();
+                updateCorrectCount();
+                checkWin();
+            });
+            leftArrows.appendChild(btn);
+        }
+        matrixDiv.appendChild(leftArrows);
+
+        // 4. 表格区域 (6x10)
+        const tableGrid = document.createElement('div');
+        tableGrid.className = 'table-grid';
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 6; col++) {
+                const card = currentGrid[col][row];
+                const isCorrect = (card.globalIdx === standardGrid[col][row].globalIdx);
+                const cell = document.createElement('div');
+                cell.className = 'card-cell';
+                if (isCorrect) cell.classList.add('correct-highlight');
+                cell.innerHTML = `
+                    <div class="card-gz">${card.gz}</div>
+                    <div class="card-year">${card.year1}年/${card.year2}年</div>
+                    <div class="nayin-sm">${card.naYin}</div>
+                `;
+                // 手机/电脑点击单元格无移动功能，保留但不做额外操作(避免干扰箭头)
+                tableGrid.appendChild(cell);
+            }
+        }
+        matrixDiv.appendChild(tableGrid);
+
+        // 5. 右侧行右箭头 (10个)
+        const rightArrows = document.createElement('div');
+        rightArrows.className = 'row-right-arrows';
+        for (let row = 0; row < 10; row++) {
+            const btn = document.createElement('div');
+            btn.className = 'row-right-btn';
+            btn.innerHTML = '▶';
+            btn.title = `向右移动第${row+1}行`;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                moveRow(row, 'right', 1);
+                renderFullMatrix();
+                updateCorrectCount();
+                checkWin();
+            });
+            rightArrows.appendChild(btn);
+        }
+        matrixDiv.appendChild(rightArrows);
+
+        // 6. 列下箭头区域 (底部)
+        const colDownDiv = document.createElement('div');
+        colDownDiv.className = 'col-down-arrows';
+        // 需要放置到新的grid行，直接放到matrixDiv最后，用grid-row自动换行
+        for (let col = 0; col < 6; col++) {
+            const btn = document.createElement('div');
+            btn.className = 'col-down-btn';
+            btn.innerHTML = '▼';
+            btn.title = `向下移动第${col+1}列`;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                moveCol(col, 'down', 1);
+                renderFullMatrix();
+                updateCorrectCount();
+                checkWin();
+            });
+            colDownDiv.appendChild(btn);
+        }
+        matrixDiv.appendChild(colDownDiv);
+
+        // 为让col-down-arrows显示在表格下方，需要指定grid位置
+        // 用grid-row: 3; 但是更简单：通过样式自动: 因为已经在最后，且grid中未定义，直接默认新行
+        // 为了保证对齐，重新定义CSS: .col-down-arrows { grid-column: 2 / 8; grid-row: auto; }
+        container.appendChild(matrixDiv);
+    }
+
+    // ---------- 手机滑动支持 ----------
+    let touchStart = null;
+    let touchTargetRowCol = null;
+
+    function attachSwipeListener() {
+        const matrixArea = document.getElementById('matrixContainer');
+        if (!matrixArea) return;
+        // 移除旧监听避免重复
+        matrixArea.removeEventListener('touchstart', onTouchStart);
+        matrixArea.removeEventListener('touchmove', onTouchMove);
+        matrixArea.removeEventListener('touchend', onTouchEnd);
+        matrixArea.addEventListener('touchstart', onTouchStart, { passive: false });
+        matrixArea.addEventListener('touchmove', onTouchMove, { passive: false });
+        matrixArea.addEventListener('touchend', onTouchEnd);
+    }
+
+    function onTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        touchStart = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+        // 获取触摸点所在的格子行列 (通过elementsFromPoint)
+        const elem = document.elementsFromPoint(touch.clientX, touch.clientY);
+        let targetCell = null;
+        for (let el of elem) {
+            if (el.classList && el.classList.contains('card-cell')) {
+                targetCell = el;
+                break;
+            }
+        }
+        if (targetCell) {
+            const allCells = Array.from(document.querySelectorAll('.card-cell'));
+            const idx = allCells.indexOf(targetCell);
+            if (idx !== -1) {
+                const row = Math.floor(idx / 6);
+                const col = idx % 6;
+                touchTargetRowCol = { row, col };
+            } else {
+                touchTargetRowCol = null;
+            }
+        } else {
+            touchTargetRowCol = null;
+        }
+    }
+
+    function onTouchMove(e) {
+        if (!touchStart) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - touchStart.x;
+        const deltaY = touch.clientY - touchStart.y;
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+        if (absX < 15 && absY < 15) return;
+
+        // 确定滑动方向 (水平或垂直)
+        if (absX > absY && absX > 20 && touchTargetRowCol !== null) {
+            // 水平滑动 - 移动整行
+            const rowIdx = touchTargetRowCol.row;
+            const direction = deltaX > 0 ? 'right' : 'left';
+            // 计算滑动格数: 基于单元格平均宽度
+            const cells = document.querySelectorAll('.card-cell');
+            if (cells.length > 0) {
+                const firstCell = cells[0];
+                const cellWidth = firstCell.getBoundingClientRect().width;
+                const steps = Math.min(5, Math.max(1, Math.floor(Math.abs(deltaX) / (cellWidth * 0.7))));
+                if (steps > 0) {
+                    moveRow(rowIdx, direction, steps);
+                    renderFullMatrix();
+                    attachSwipeListener(); // 重新绑定
+                    updateCorrectCount();
+                    checkWin();
+                    // 显示提示
+                    const msgDiv = document.getElementById('messageArea');
+                    msgDiv.style.opacity = '0.7';
+                    setTimeout(() => { if(msgDiv) msgDiv.style.opacity = '1'; }, 200);
+                }
+            }
+            touchStart = null;
+            return;
+        }
+        else if (absY > absX && absY > 20 && touchTargetRowCol !== null) {
+            // 垂直滑动 - 移动整列
+            const colIdx = touchTargetRowCol.col;
+            const direction = deltaY > 0 ? 'down' : 'up';
+            const cells = document.querySelectorAll('.card-cell');
+            if (cells.length > 0) {
+                const firstCell = cells[0];
+                const cellHeight = firstCell.getBoundingClientRect().height;
+                const steps = Math.min(9, Math.max(1, Math.floor(Math.abs(deltaY) / (cellHeight * 0.6))));
+                if (steps > 0) {
+                    moveCol(colIdx, direction, steps);
+                    renderFullMatrix();
+                    attachSwipeListener();
+                    updateCorrectCount();
+                    checkWin();
+                }
+            }
+            touchStart = null;
+            return;
+        }
+    }
+
+    function onTouchEnd(e) {
+        touchStart = null;
+        touchTargetRowCol = null;
+    }
+
+    // 重置打乱
+    function resetAndShuffle() {
+        randomShuffle();
+        renderFullMatrix();
+        attachSwipeListener();
+        updateCorrectCount();
+        const msgSpan = document.getElementById('messageArea');
+        if(msgSpan) msgSpan.innerHTML = '<span>📱 手机横向/竖向滑动移动整行列 | 🖱️ 电脑点击箭头移动</span><span class="swipe-hint">⬅️➡️ 滑动行 &nbsp;&nbsp; ⬆️⬇️ 滑动列</span>';
+    }
+
+    // 初始化页面
+    function init() {
+        initStandard();
+        randomShuffle(); // 随机打乱
+        renderFullMatrix();
+        attachSwipeListener();
+        updateCorrectCount();
+        document.getElementById('shuffleBtn').addEventListener('click', () => {
+            resetAndShuffle();
+        });
+        // 窗口改变时可能需要重新绑定
+        window.addEventListener('resize', () => {
+            renderFullMatrix();
+            attachSwipeListener();
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>
