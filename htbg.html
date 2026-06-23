@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>羲黄玄门 · 后天八卦记忆</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+    }
+    #app {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(4px);
+      border-radius: 36px;
+      padding: 24px 16px 30px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      font-size: clamp(1.3rem, 5vw, 2.0rem);
+      letter-spacing: 2px;
+      color: #f5e6d3;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      margin: 0 0 2px 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    h1 small {
+      font-weight: 300;
+      font-size: 0.5em;
+      color: #c9b8a4;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      color: #b8a99a;
+      margin: 0 0 12px 0;
+      letter-spacing: 0.5px;
+      font-weight: 300;
+      border-bottom: 1px solid rgba(255, 215, 150, 0.15);
+      padding-bottom: 10px;
+    }
+    #status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 6px 14px 6px;
+      color: #d4c9bc;
+      font-size: clamp(0.8rem, 2.5vw, 1.0rem);
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    #step-info {
+      background: rgba(255, 255, 255, 0.10);
+      padding: 4px 14px;
+      border-radius: 40px;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s;
+    }
+    #step-info.victory {
+      background: rgba(255, 215, 0, 0.25);
+      border-color: #FFD700;
+      color: #FFD700;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+    #reset-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 150, 0.25);
+      color: #f0e0d0;
+      padding: 4px 18px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(2px);
+    }
+    #reset-btn:active {
+      transform: scale(0.94);
+      background: rgba(255, 200, 150, 0.2);
+    }
+    #grid-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      width: 100%;
+      height: 100%;
+      gap: 2px;
+      background: #2a2a3e;
+    }
+    .cell {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      transition: background 0.2s;
+      cursor: pointer;
+      background-color: #3a3a4e;
+      padding: 6px 4px;
+      overflow: hidden;
+      border-radius: 4px;
+      gap: 2px;
+    }
+    .info {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      flex: 1;
+      line-height: 1.3;
+      padding: 2px 0;
+    }
+    .cell.visited .info {
+      display: flex;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: clamp(0.9rem, 3vw, 1.4rem);
+      font-weight: 600;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      flex-shrink: 0;
+      padding-bottom: 2px;
+    }
+    .header .symbol {
+      font-size: clamp(1.4rem, 4.5vw, 2.4rem);
+      line-height: 1;
+      font-weight: 400;
+    }
+    .header .name {
+      font-weight: 600;
+    }
+    .header .num {
+      font-weight: 600;
+      opacity: 0.9;
+    }
+    .details {
+      font-size: clamp(0.5rem, 1.6vw, 0.8rem);
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      opacity: 0.95;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      max-width: 100%;
+      word-break: keep-all; /* 防止中文折行 */
+      line-height: 1.4;
+    }
+    .details .family-note {
+      font-size: 0.7em;
+      opacity: 0.85;
+    }
+    .cell.visited.mid .header .symbol {
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+    }
+    .cell.visited.mid .details {
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-weight: 600;
+    }
+    .dot {
+      width: 14%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: #FFD700;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
+      flex-shrink: 0;
+      margin-top: auto;
+      margin-bottom: 2px;
+      transition: background 0.3s, box-shadow 0.3s;
+      pointer-events: none;
+    }
+    .cell.visited .dot {
+      background: #FFD700;
+      box-shadow: 0 0 24px #FFD700, 0 0 40px rgba(255, 215, 0, 0.4);
+    }
+    #lineCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 24px;
+    }
+    @media (max-width: 480px) {
+      #app {
+        padding: 16px 12px 22px;
+        border-radius: 28px;
+      }
+      .details {
+        font-size: clamp(0.45rem, 1.6vw, 0.65rem);
+      }
+      .header .symbol {
+        font-size: clamp(1.2rem, 4vw, 2.0rem);
+      }
+      .header {
+        font-size: clamp(0.8rem, 2.8vw, 1.2rem);
+      }
+    }
+    @media (min-width: 768px) {
+      #app {
+        padding: 30px 30px 40px;
+      }
+      .details {
+        font-size: 0.9rem;
+      }
+      .header .symbol {
+        font-size: 2.8rem;
+      }
+      .header {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <h1>羲黄玄门 <small>· 后天八卦记忆</small></h1>
+  <div class="subtitle">游戏玩法：请按后天八卦的顺序点击宫位连线</div>
+
+  <div id="status-bar">
+    <span id="step-info">⚡ 第 0 / 9 步</span>
+    <button id="reset-btn">⟳ 重新开始</button>
+  </div>
+
+  <div id="grid-wrapper">
+    <div id="grid"></div>
+    <canvas id="lineCanvas"></canvas>
+  </div>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    // ----- 数据定义 (family 改为对象，便于拆分主名和备注) -----
+    const ORDER = ['坎', '坤', '震', '巽', '中', '乾', '兑', '艮', '离'];
+    const NUM_MAP = {
+      '坎': '一', '坤': '二', '震': '三', '巽': '四', '中': '五',
+      '乾': '六', '兑': '七', '艮': '八', '离': '九'
+    };
+
+    // 家族称谓：主名 + 备注（括号内）
+    const FAMILY_DATA = {
+      '坎': { main: '中男', note: '二儿子' },
+      '坤': { main: '母亲', note: '女主人' },
+      '震': { main: '长男', note: '大儿子' },
+      '巽': { main: '长女', note: '大女儿' },
+      '离': { main: '中女', note: '二女儿' },
+      '兑': { main: '少女', note: '小女儿' },
+      '艮': { main: '少男', note: '小儿子' },
+      '乾': { main: '父亲', note: '男主人' },
+      '中': null // 中宫无家族
+    };
+
+    const DATA = {
+      '坎': {
+        name: '坎',
+        symbol: '☵',
+        direction: '正北',
+        element: '水',
+        family: FAMILY_DATA['坎'],
+        body: '耳、肾、血',
+        color: '#000000',
+        textColor: '#ffffff'
+      },
+      '坤': {
+        name: '坤',
+        symbol: '☷',
+        direction: '西南',
+        element: '土',
+        family: FAMILY_DATA['坤'],
+        body: '腹、脾、胃',
+        color: '#C9A96E',
+        textColor: '#1a1a1a'
+      },
+      '震': {
+        name: '震',
+        symbol: '☳',
+        direction: '正东',
+        element: '木',
+        family: FAMILY_DATA['震'],
+        body: '足、肝、筋',
+        color: '#4CAF50',
+        textColor: '#ffffff'
+      },
+      '巽': {
+        name: '巽',
+        symbol: '☴',
+        direction: '东南',
+        element: '木',
+        family: FAMILY_DATA['巽'],
+        body: '股、胆',
+        color: '#2E8B57',
+        textColor: '#ffffff'
+      },
+      '中': {
+        name: '中',
+        symbol: '⊙',
+        direction: '中央',
+        element: '土',
+        family: null,
+        body: '',
+        color: '#FFD700',
+        textColor: '#1a1a1a',
+        isMid: true
+      },
+      '乾': {
+        name: '乾',
+        symbol: '☰',
+        direction: '西北',
+        element: '金',
+        family: FAMILY_DATA['乾'],
+        body: '头、骨、肺',
+        color: '#F5F5F5',
+        textColor: '#1a1a1a'
+      },
+      '兑': {
+        name: '兑',
+        symbol: '☱',
+        direction: '正西',
+        element: '金',
+        family: FAMILY_DATA['兑'],
+        body: '口、舌',
+        color: '#FFFFFF',
+        textColor: '#1a1a1a'
+      },
+      '艮': {
+        name: '艮',
+        symbol: '☶',
+        direction: '东北',
+        element: '土',
+        family: FAMILY_DATA['艮'],
+        body: '手、鼻、背',
+        color: '#A0522D',
+        textColor: '#ffffff'
+      },
+      '离': {
+        name: '离',
+        symbol: '☲',
+        direction: '正南',
+        element: '火',
+        family: FAMILY_DATA['离'],
+        body: '目、心',
+        color: '#DC143C',
+        textColor: '#ffffff'
+      }
+    };
+
+    // ----- DOM 引用 -----
+    const gridEl = document.getElementById('grid');
+    const canvas = document.getElementById('lineCanvas');
+    const ctx = canvas.getContext('2d');
+    const stepInfo = document.getElementById('step-info');
+    const resetBtn = document.getElementById('reset-btn');
+
+    // ----- 状态 -----
+    let currentStep = 0;
+    let visited = [];
+    let gameFinished = false;
+    let cellElements = {};
+
+    // ----- 音效 -----
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTone(freq, duration = 0.15, volume = 0.25, delay = 0) {
+      if (!audioCtx) return;
+      setTimeout(() => {
+        try {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (_) { /* ignore */ }
+      }, delay * 1000);
+    }
+
+    function playVictoryMelody() {
+      initAudio();
+      const melody = [
+        { freq: 523, dur: 0.2, vol: 0.3, delay: 0 },
+        { freq: 659, dur: 0.2, vol: 0.3, delay: 0.18 },
+        { freq: 784, dur: 0.2, vol: 0.3, delay: 0.36 },
+        { freq: 1047, dur: 0.35, vol: 0.35, delay: 0.54 },
+        { freq: 880, dur: 0.15, vol: 0.25, delay: 0.9 },
+        { freq: 988, dur: 0.15, vol: 0.25, delay: 1.1 },
+        { freq: 1175, dur: 0.4, vol: 0.35, delay: 1.3 },
+      ];
+      melody.forEach(n => {
+        playTone(n.freq, n.dur, n.vol, n.delay);
+      });
+    }
+
+    // ----- 构建宫格 -----
+    function buildGrid() {
+      gridEl.innerHTML = '';
+      cellElements = {};
+      const positions = [
+        { name: '巽', row: 0, col: 0 },
+        { name: '离', row: 0, col: 1 },
+        { name: '坤', row: 0, col: 2 },
+        { name: '震', row: 1, col: 0 },
+        { name: '中', row: 1, col: 1 },
+        { name: '兑', row: 1, col: 2 },
+        { name: '艮', row: 2, col: 0 },
+        { name: '坎', row: 2, col: 1 },
+        { name: '乾', row: 2, col: 2 }
+      ];
+
+      positions.forEach(pos => {
+        const name = pos.name;
+        const data = DATA[name];
+        const num = NUM_MAP[name] || '';
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        if (data.isMid) cell.classList.add('mid');
+        cell.dataset.name = name;
+        cell.style.backgroundColor = data.color;
+        cell.style.color = data.textColor;
+
+        // ---- 信息区域 (默认隐藏) ----
+        const info = document.createElement('div');
+        info.className = 'info';
+
+        // 顶部：符号 + 名称 + 数字
+        const header = document.createElement('div');
+        header.className = 'header';
+        const symbolSpan = document.createElement('span');
+        symbolSpan.className = 'symbol';
+        symbolSpan.textContent = data.symbol || '⊙';
+        header.appendChild(symbolSpan);
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'name';
+        nameSpan.textContent = data.name;
+        header.appendChild(nameSpan);
+        const numSpan = document.createElement('span');
+        numSpan.className = 'num';
+        numSpan.textContent = num;
+        header.appendChild(numSpan);
+        info.appendChild(header);
+
+        // 中部详情
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'details';
+        if (data.isMid) {
+          detailsDiv.textContent = '中宫';
+        } else {
+          // 构建 line1: 方向 + 五行 + 家族（主名+备注）
+          let familyHtml = '';
+          if (data.family) {
+            const main = data.family.main || '';
+            const note = data.family.note ? `（${data.family.note}）` : '';
+            familyHtml = `${main} <span class="family-note">${note}</span>`;
+          }
+          const line1 = `${data.direction}  ${data.element}  ${familyHtml}`;
+          const line2 = data.body || '';
+          detailsDiv.innerHTML = `${line1}<br>${line2}`;
+        }
+        info.appendChild(detailsDiv);
+
+        cell.appendChild(info);
+
+        // ---- 连线圆点 ----
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        cell.appendChild(dot);
+
+        cell.addEventListener('click', cellClickHandler);
+
+        gridEl.appendChild(cell);
+        cellElements[name] = cell;
+      });
+    }
+
+    // ----- 点击处理 -----
+    function cellClickHandler(e) {
+      if (gameFinished) return;
+      const cell = e.currentTarget;
+      const name = cell.dataset.name;
+      if (cell.classList.contains('visited')) return;
+
+      if (name === ORDER[currentStep]) {
+        cell.classList.add('visited');
+        visited.push(name);
+        currentStep++;
+        updateStepInfo();
+        drawLines();
+
+        if (currentStep === ORDER.length) {
+          gameFinished = true;
+          playVictoryMelody();
+          setTimeout(() => {
+            stepInfo.textContent = '🎉 恭喜通关！';
+            stepInfo.classList.add('victory');
+          }, 400);
+        }
+      } else {
+        cell.style.transform = 'scale(0.92)';
+        setTimeout(() => {
+          cell.style.transform = '';
+        }, 150);
+      }
+    }
+
+    function updateStepInfo() {
+      if (!gameFinished) {
+        stepInfo.textContent = `⚡ 第 ${currentStep} / ${ORDER.length} 步`;
+        stepInfo.classList.remove('victory');
+      }
+    }
+
+    // ----- 连线绘制 -----
+    function drawLines() {
+      const wrapper = document.getElementById('grid-wrapper');
+      const rect = wrapper.getBoundingClientRect();
+      const width = wrapper.clientWidth;
+      const height = wrapper.clientHeight;
+
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+
+      ctx.clearRect(0, 0, width, height);
+      if (visited.length < 2) return;
+
+      const points = visited.map(name => {
+        const cell = cellElements[name];
+        if (!cell) return null;
+        const dot = cell.querySelector('.dot');
+        if (!dot) return null;
+        const dotRect = dot.getBoundingClientRect();
+        const x = dotRect.left - rect.left + dotRect.width / 2;
+        const y = dotRect.top - rect.top + dotRect.height / 2;
+        return { x, y };
+      }).filter(p => p !== null);
+
+      if (points.length < 2) return;
+
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.strokeStyle = 'rgba(255, 215, 150, 0.85)';
+      const lineWidth = Math.min(Math.min(width, height) * 0.012, 4);
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = 'rgba(255, 200, 100, 0.4)';
+      ctx.shadowBlur = 6;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      points.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.min(width, height) * 0.03, 0, 2 * Math.PI);
+        ctx.fillStyle = '#FFD700';
+        ctx.shadowColor = 'rgba(255, 215, 0, 0.6)';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.min(width, height) * 0.05, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.12)';
+        ctx.shadowBlur = 0;
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+    }
+
+    // ----- 重置 -----
+    function resetGame() {
+      currentStep = 0;
+      visited = [];
+      gameFinished = false;
+      document.querySelectorAll('.cell').forEach(cell => {
+        cell.classList.remove('visited');
+      });
+      updateStepInfo();
+      stepInfo.classList.remove('victory');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // ----- 自适应 -----
+    let resizeTimer = null;
+    function handleResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (visited.length > 0) {
+          drawLines();
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }, 100);
+    }
+
+    // ----- 初始化 -----
+    function init() {
+      buildGrid();
+      const wrapper = document.getElementById('grid-wrapper');
+      canvas.width = wrapper.clientWidth;
+      canvas.height = wrapper.clientHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      updateStepInfo();
+
+      resetBtn.addEventListener('click', resetGame);
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(handleResize, 300);
+      });
+      document.addEventListener('click', () => {
+        initAudio();
+      }, { once: true });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    document.addEventListener('click', function activateAudio() {
+      initAudio();
+    }, { once: true });
+
+  })();
+</script>
+</body>
+</html>
