@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>大游年 · 飞星记忆</title>
+  <title>羲黄玄门 - 大游年歌诀 飞星记忆</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
-      background: #1a1a2e;
+      background: #2a2a3a;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -17,132 +17,142 @@
       margin: 0;
     }
     #app {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(4px);
       border-radius: 36px;
       padding: 20px 16px 28px;
-      max-width: 540px;
+      max-width: 560px;
       width: 100%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
     }
     h1 {
       text-align: center;
       font-weight: 600;
-      font-size: clamp(1.4rem, 5vw, 2.0rem);
-      color: #f5e6d3;
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      color: #e8e0d8;
       text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      margin: 0 0 2px 0;
+      margin: 0 0 4px 0;
     }
     .subtitle {
       text-align: center;
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
-      color: #b8a99a;
-      margin: 0 0 12px 0;
-      border-bottom: 1px solid rgba(255,215,150,0.15);
+      font-size: clamp(0.8rem, 2.2vw, 1.0rem);
+      color: #b0a89a;
+      margin: 0 0 14px 0;
+      border-bottom: 1px solid rgba(255,215,150,0.1);
       padding-bottom: 10px;
     }
-    #status-bar {
+    #top-bar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 6px 4px 12px 4px;
-      color: #d4c9bc;
-      font-size: clamp(0.8rem, 2.5vw, 1.0rem);
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
-      gap: 6px;
     }
-    #step-info {
-      background: rgba(255,255,255,0.10);
-      padding: 4px 14px;
-      border-radius: 40px;
-      backdrop-filter: blur(2px);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: all 0.3s;
-      flex: 1;
-      min-width: 120px;
-    }
-    #step-info.victory {
-      background: rgba(255,215,0,0.25);
-      border-color: #FFD700;
-      color: #FFD700;
-      font-weight: 600;
-    }
-    #reset-btn {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,215,150,0.25);
-      color: #f0e0d0;
-      padding: 4px 18px;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    #reset-btn:active { transform: scale(0.94); background: rgba(255,200,150,0.2); }
     #mode-tabs {
       display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 12px;
+      gap: 6px;
+      flex: 1;
+      min-width: 160px;
     }
     .mode-tab {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,215,150,0.15);
-      color: #b8a99a;
-      padding: 6px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,215,150,0.1);
+      color: #a09888;
+      padding: 8px 18px;
       border-radius: 40px;
-      font-size: 0.9rem;
+      font-size: 1.0rem;
       cursor: pointer;
       transition: 0.2s;
-    }
-    .mode-tab.active { background: #FFD700; color: #1a1a2e; border-color: #FFD700; font-weight: 600; }
-    .mode-tab:active { transform: scale(0.94); }
-    #selector-area {
+      flex: 1;
       text-align: center;
-      padding: 8px 0 12px;
-      min-height: 70px;
+      font-weight: 500;
     }
-    #selector-area p {
-      color: #d4c9bc;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
+    .mode-tab.active { background: #c0a060; color: #1a1a2e; border-color: #c0a060; font-weight: 700; }
+    .mode-tab:active { transform: scale(0.94); }
+    #reset-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,215,150,0.15);
+      color: #c8c0b8;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 1.0rem;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    #reset-btn:active { transform: scale(0.94); background: rgba(255,200,150,0.1); }
+    #selector-area {
+      text-align: left;
+      padding: 6px 0 12px 0;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    #selector-area .label {
+      color: #c8c0b8;
+      font-size: 1.05rem;
+      font-weight: 500;
+      white-space: nowrap;
     }
     .option-grid {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
+      gap: 6px;
+      align-items: center;
     }
     .option-btn {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,215,150,0.2);
-      color: #f0e0d0;
-      padding: 6px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,215,150,0.15);
+      color: #c8c0b8;
+      padding: 6px 16px;
       border-radius: 40px;
-      font-size: 0.95rem;
+      font-size: 1.0rem;
       cursor: pointer;
       transition: 0.2s;
       min-width: 44px;
     }
-    .option-btn:active { transform: scale(0.92); background: rgba(255,200,150,0.2); }
-    .option-btn.selected { background: #FFD700; color: #1a1a2e; border-color: #FFD700; font-weight: 600; }
-    .pair-hint {
-      color: #c9b8a4;
-      font-size: 0.85rem;
+    .option-btn:active { transform: scale(0.92); background: rgba(255,200,150,0.1); }
+    .option-btn.selected { background: #c0a060; color: #1a1a2e; border-color: #c0a060; font-weight: 600; }
+    #pair-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-top: 6px;
-      padding: 4px 12px;
-      background: rgba(255,215,0,0.08);
-      border-radius: 20px;
-      display: inline-block;
+      flex-wrap: wrap;
     }
+    #pair-status .msg {
+      color: #d4c080;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    #pair-status .btn-primary {
+      background: #c0a060;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-size: 1.0rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      white-space: nowrap;
+    }
+    #pair-status .btn-primary:active { transform: scale(0.94); }
+    #pair-status .btn-primary:disabled { opacity: 0.4; pointer-events: none; }
     #grid-wrapper {
       position: relative;
       width: 100%;
       aspect-ratio: 1/1;
-      margin: 0 auto;
+      margin: 6px auto 0;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), 0 12px 30px rgba(0,0,0,0.5);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 12px 30px rgba(0,0,0,0.5);
     }
     #grid {
       display: grid;
@@ -151,7 +161,7 @@
       width: 100%;
       height: 100%;
       gap: 2px;
-      background: #2a2a3e;
+      background: #2a2a3a;
     }
     .cell {
       position: relative;
@@ -165,15 +175,15 @@
       background-color: #3a3a4e;
       padding: 4px 2px;
       border-radius: 4px;
-      color: #fff;
+      color: #f0e8e0;
       gap: 2px;
     }
     .cell .top-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      font-size: clamp(1.0rem, 3.5vw, 1.6rem);
+      gap: 8px;
+      font-size: clamp(1.0rem, 3.2vw, 1.5rem);
       font-weight: 700;
       text-shadow: 0 2px 6px rgba(0,0,0,0.5);
       width: 100%;
@@ -186,55 +196,56 @@
       text-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
     .cell .top-row .name { font-weight: 700; }
-    .cell .top-row .num { font-weight: 700; opacity: 0.9; }
+    .cell .top-row .num { font-weight: 700; opacity: 0.8; }
     .cell .star-display {
-      font-size: clamp(0.9rem, 2.8vw, 1.3rem);
-      background: rgba(0,0,0,0.3);
-      padding: 6px 14px;
+      font-size: clamp(0.9rem, 2.6vw, 1.3rem);
+      background: rgba(0,0,0,0.25);
+      padding: 5px 14px;
       border-radius: 20px;
       margin-top: 2px;
       backdrop-filter: blur(2px);
       cursor: pointer;
       border: 1px solid transparent;
-      min-width: 70px;
+      min-width: 64px;
       text-align: center;
       font-weight: 600;
       line-height: 1.4;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     .cell .star-display.empty {
-      border: 1px dashed rgba(255,255,255,0.5);
-      color: rgba(255,255,255,0.7);
+      border: 1px dashed rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.6);
     }
     .cell .star-display.filled {
-      border: 1px solid rgba(255,215,0,0.6);
-      background: rgba(255,215,0,0.2);
-      color: #fff;
+      border: 1px solid rgba(200,160,96,0.5);
+      background: rgba(200,160,96,0.15);
+      color: #f0e8e0;
     }
     .cell .star-display.fuwei {
-      border: 2px solid #FFD700;
-      background: rgba(255,215,0,0.3);
-      color: #FFD700;
+      border: 2px solid #c0a060;
+      background: rgba(200,160,96,0.2);
+      color: #e8d080;
       font-weight: 700;
     }
     .cell .star-detail {
       font-size: clamp(0.6rem, 1.8vw, 0.85rem);
-      opacity: 0.9;
-      margin-top: 2px;
+      opacity: 0.95;
+      margin-top: 1px;
       color: inherit;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
       min-height: 1.2em;
-      line-height: 1.3;
+      line-height: 1.2;
       font-weight: 500;
+      white-space: nowrap;
     }
     .cell.clickable { cursor: pointer; }
     .cell.highlight {
-      box-shadow: 0 0 0 3px #FFD700;
+      box-shadow: 0 0 0 3px #c0a060;
       transform: scale(1.03);
       z-index: 2;
     }
     .cell.paired {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: default;
     }
     .cell.paired .top-row { opacity: 0.8; }
@@ -248,30 +259,16 @@
       border-radius: 24px;
     }
     #action-area {
-      margin-top: 16px;
+      margin-top: 12px;
       text-align: center;
     }
     #message {
-      color: #d4c9bc;
-      font-size: 0.95rem;
+      color: #c8c0b8;
+      font-size: 1.0rem;
       min-height: 1.8rem;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
-    .btn-primary {
-      background: #FFD700;
-      border: none;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #1a1a2e;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .btn-primary:active { transform: scale(0.94); }
-    .btn-primary:disabled { opacity: 0.4; pointer-events: none; }
     #star-picker {
       position: fixed;
       bottom: 0;
@@ -287,21 +284,21 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 12px;
-      border-top: 1px solid rgba(255,215,150,0.2);
+      border-top: 1px solid rgba(255,215,150,0.15);
       max-height: 60vh;
       overflow-y: auto;
     }
     #star-picker .picker-title {
       width: 100%;
       text-align: center;
-      color: #f0e0d0;
+      color: #e8e0d8;
       font-size: 1.2rem;
       margin-bottom: 8px;
     }
     #star-picker button {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,215,150,0.25);
-      color: #f0e0d0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,215,150,0.2);
+      color: #e8e0d8;
       padding: 12px 24px;
       border-radius: 40px;
       font-size: 1.1rem;
@@ -311,10 +308,10 @@
       flex: 1 0 auto;
       max-width: 120px;
     }
-    #star-picker button:active { transform: scale(0.92); background: rgba(255,200,150,0.2); }
+    #star-picker button:active { transform: scale(0.92); background: rgba(255,200,150,0.1); }
     #star-picker .cancel-btn {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.1);
       color: #888;
       flex: 0 1 auto;
       min-width: 60px;
@@ -322,24 +319,26 @@
     @media (max-width: 480px) {
       #app { padding: 16px 12px 20px; }
       .cell .top-row .symbol { font-size: clamp(1.4rem, 4.5vw, 2.2rem); }
-      .cell .top-row { font-size: clamp(0.8rem, 3vw, 1.2rem); gap: 6px; }
-      .cell .star-display { font-size: clamp(0.8rem, 2.5vw, 1.1rem); padding: 5px 10px; min-width: 60px; }
+      .cell .top-row { font-size: clamp(0.8rem, 3vw, 1.2rem); gap: 4px; }
+      .cell .star-display { font-size: clamp(0.8rem, 2.4vw, 1.1rem); padding: 4px 10px; min-width: 54px; }
+      .cell .star-detail { font-size: clamp(0.5rem, 1.5vw, 0.7rem); white-space: nowrap; }
+      .mode-tab { font-size: 0.9rem; padding: 6px 12px; }
+      #reset-btn { font-size: 0.9rem; padding: 6px 14px; }
+      .option-btn { font-size: 0.9rem; padding: 4px 12px; }
     }
   </style>
 </head>
 <body>
 <div id="app">
-  <h1>大游年 · 飞星记忆</h1>
+  <h1>羲黄玄门 - 大游年歌诀 飞星记忆</h1>
   <div class="subtitle">八宅风水 · 后天八卦</div>
 
-  <div id="status-bar">
-    <span id="step-info">🔮 选择模式</span>
+  <div id="top-bar">
+    <div id="mode-tabs">
+      <span class="mode-tab active" data-mode="fill">📝 飞星填空</span>
+      <span class="mode-tab" data-mode="pair">🔗 星曜配对</span>
+    </div>
     <button id="reset-btn">⟳ 重来</button>
-  </div>
-
-  <div id="mode-tabs">
-    <span class="mode-tab active" data-mode="fill">📝 飞星填空</span>
-    <span class="mode-tab" data-mode="pair">🔗 星曜配对</span>
   </div>
 
   <div id="selector-area"></div>
@@ -351,7 +350,10 @@
 
   <div id="action-area">
     <div id="message"></div>
-    <button class="btn-primary" id="next-btn" style="display:none;">下一关</button>
+    <div id="pair-status" style="display:none;">
+      <span class="msg"></span>
+      <button class="btn-primary" id="pair-done-btn" style="display:none;">完成</button>
+    </div>
   </div>
 
   <div id="star-picker">
@@ -363,7 +365,6 @@
   (function(){
     'use strict';
 
-    // ---------- 星曜详情（根据图片） ----------
     const STAR_DETAIL = {
       '六煞': '六煞文曲水星，凶',
       '天医': '天医巨门土星，吉',
@@ -375,7 +376,6 @@
       '伏位': '伏位左辅木星，吉'
     };
 
-    // ---------- 配对（不变） ----------
     const PAIR_MAP = {
       '天医': [['坎','震'], ['乾','艮'], ['巽','离'], ['坤','兑']],
       '生气': [['坎','巽'], ['乾','兑'], ['震','离'], ['坤','艮']],
@@ -387,22 +387,20 @@
     };
     const PAIR_STARS = Object.keys(PAIR_MAP);
 
-    // ---------- 八卦数据 ----------
     const GUA_DATA = {
-      '坎': { name:'坎', symbol:'☵', num:'一', color:'#000000', textColor:'#ffffff' },
-      '坤': { name:'坤', symbol:'☷', num:'二', color:'#C9A96E', textColor:'#1a1a1a' },
-      '震': { name:'震', symbol:'☳', num:'三', color:'#4CAF50', textColor:'#ffffff' },
-      '巽': { name:'巽', symbol:'☴', num:'四', color:'#2E8B57', textColor:'#ffffff' },
-      '中': { name:'中', symbol:'⊙', num:'五', color:'#FFD700', textColor:'#1a1a1a' },
-      '乾': { name:'乾', symbol:'☰', num:'六', color:'#F5F5F5', textColor:'#1a1a1a' },
-      '兑': { name:'兑', symbol:'☱', num:'七', color:'#FFFFFF', textColor:'#1a1a1a' },
-      '艮': { name:'艮', symbol:'☶', num:'八', color:'#A0522D', textColor:'#ffffff' },
-      '离': { name:'离', symbol:'☲', num:'九', color:'#DC143C', textColor:'#ffffff' }
+      '坎': { name:'坎', symbol:'☵', num:'一', color:'#3A4A5A', textColor:'#e8e0d8' },
+      '坤': { name:'坤', symbol:'☷', num:'二', color:'#C3A995', textColor:'#1a1a2e' },
+      '震': { name:'震', symbol:'☳', num:'三', color:'#5F8B6F', textColor:'#e8e0d8' },
+      '巽': { name:'巽', symbol:'☴', num:'四', color:'#7D9B7A', textColor:'#1a1a2e' },
+      '中': { name:'中', symbol:'⊙', num:'五', color:'#D4C5A0', textColor:'#1a1a2e' },
+      '乾': { name:'乾', symbol:'☰', num:'六', color:'#D5D0C7', textColor:'#1a1a2e' },
+      '兑': { name:'兑', symbol:'☱', num:'七', color:'#E8E0D8', textColor:'#1a1a2e' },
+      '艮': { name:'艮', symbol:'☶', num:'八', color:'#B5937A', textColor:'#e8e0d8' },
+      '离': { name:'离', symbol:'☲', num:'九', color:'#B55A5A', textColor:'#e8e0d8' }
     };
     const GUA_NO_MID = ['坎','坤','震','巽','乾','兑','艮','离'];
     const CLOCKWISE = ['坎','艮','震','巽','离','坤','兑','乾'];
 
-    // ---------- 伏位→星曜映射 ----------
     const FUWEI_MAP = {
       '乾': ['六煞','天医','五鬼','祸害','绝命','延年','生气'],
       '坎': ['五鬼','天医','生气','延年','绝命','祸害','六煞'],
@@ -414,30 +412,28 @@
       '兑': ['生气','祸害','延年','绝命','六煞','五鬼','天医']
     };
 
-    // ---------- DOM ----------
     const gridEl = document.getElementById('grid');
     const canvas = document.getElementById('lineCanvas');
     const ctx = canvas.getContext('2d');
-    const stepInfo = document.getElementById('step-info');
+    const messageEl = document.getElementById('message');
     const resetBtn = document.getElementById('reset-btn');
     const selectorArea = document.getElementById('selector-area');
-    const messageEl = document.getElementById('message');
-    const nextBtn = document.getElementById('next-btn');
+    const pairStatus = document.getElementById('pair-status');
+    const pairMsg = pairStatus.querySelector('.msg');
+    const pairDoneBtn = document.getElementById('pair-done-btn');
     const modeTabs = document.querySelectorAll('.mode-tab');
     const starPicker = document.getElementById('star-picker');
 
-    // ---------- 状态 ----------
     let currentMode = 'fill';
     let currentFuwei = null;
-    let fillStars = {};        // 用户选择的星曜（可能对也可能错）
-    let fillDetails = {};     // 存储正确的星曜详情（仅当选择正确时）
+    let fillStars = {};
+    let fillDetails = {};
     let fillTarget = {};
     let currentPairStar = null;
     let pairCompleted = [];
     let pairSelected = null;
     let pairCells = {};
 
-    // ---------- 核心：动态计算星曜 ----------
     function getStarForGua(fuwei, gua) {
       if (gua === fuwei) return '伏位';
       const fuweiIdx = CLOCKWISE.indexOf(fuwei);
@@ -457,7 +453,6 @@
       return targets;
     }
 
-    // ---------- 渲染九宫格（增加详情） ----------
     function renderGrid(mode) {
       const positions = [
         { name: '巽' }, { name: '离' }, { name: '坤' },
@@ -474,11 +469,10 @@
         cell.className = 'cell';
         cell.dataset.name = name;
         let bg = data.color;
-        if (name === '中') bg = '#FFD700';
+        if (name === '中') bg = data.color;
         cell.style.backgroundColor = bg;
         cell.style.color = data.textColor;
 
-        // 顶部行
         const topRow = document.createElement('div');
         topRow.className = 'top-row';
         const sym = document.createElement('span');
@@ -496,13 +490,12 @@
         cell.appendChild(topRow);
 
         if (mode === 'fill') {
-          // 星曜选择按钮
           const starDiv = document.createElement('div');
           starDiv.className = 'star-display';
           if (name === '中') {
             starDiv.textContent = '中宫';
             starDiv.style.cursor = 'default';
-            starDiv.style.background = 'rgba(0,0,0,0.2)';
+            starDiv.style.background = 'rgba(0,0,0,0.15)';
           } else if (name === currentFuwei) {
             starDiv.textContent = '伏位';
             starDiv.classList.add('fuwei');
@@ -521,21 +514,18 @@
           }
           cell.appendChild(starDiv);
 
-          // 星曜详情区域（仅当选择正确时显示）
           const detailDiv = document.createElement('div');
           detailDiv.className = 'star-detail';
           if (name === '中') {
             detailDiv.textContent = '';
           } else if (name === currentFuwei) {
-            // 伏位直接显示详情
             detailDiv.textContent = STAR_DETAIL['伏位'] || '';
           } else {
-            // 检查是否有正确的详情
             const detail = fillDetails[name];
             if (detail) {
               detailDiv.textContent = detail;
             } else {
-              detailDiv.textContent = ''; // 空
+              detailDiv.textContent = '';
             }
           }
           cell.appendChild(detailDiv);
@@ -573,13 +563,12 @@
       return false;
     }
 
-    // ---------- 配对点击 ----------
     function handlePairClick(gua, cell) {
       if (isPaired(gua)) return;
       if (pairSelected === null) {
         pairSelected = gua;
         cell.classList.add('highlight');
-        messageEl.textContent = `已选 ${gua}，请点击配对的宫位`;
+        messageEl.textContent = `已选 ${gua}`;
       } else if (pairSelected === gua) {
         cell.classList.remove('highlight');
         pairSelected = null;
@@ -604,25 +593,23 @@
           if (cell1) cell1.classList.remove('highlight');
           if (cell2) cell2.classList.remove('highlight');
           pairSelected = null;
-          messageEl.textContent = `✅ 配对成功：${first} - ${second}`;
+          messageEl.textContent = `✅ ${first} - ${second}`;
           drawPairLines();
           if (pairCompleted.length === 4) {
-            messageEl.textContent = `🎉 “${currentPairStar}”所有配对完成！`;
-            nextBtn.style.display = 'inline-block';
-            nextBtn.textContent = '完成';
-            nextBtn.disabled = false;
+            pairMsg.textContent = `🎉 “${currentPairStar}”所有配对完成！`;
+            pairDoneBtn.style.display = 'inline-block';
+            pairStatus.style.display = 'flex';
+            messageEl.textContent = '';
           }
         } else {
-          const pairStr = pairs.map(p => p.join('-')).join('、');
-          messageEl.textContent = `❌ ${first} 和 ${second} 不是“${currentPairStar}”的配对，正确配对：${pairStr}`;
           const cell1 = pairCells[first];
           if (cell1) cell1.classList.remove('highlight');
           pairSelected = null;
+          messageEl.textContent = `❌ ${first} 和 ${second} 不是配对`;
         }
       }
     }
 
-    // ---------- 绘制连线 ----------
     function drawPairLines() {
       const wrapper = document.getElementById('grid-wrapper');
       const rect = wrapper.getBoundingClientRect();
@@ -652,15 +639,15 @@
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = 'rgba(255, 215, 0, 0.9)';
+          ctx.strokeStyle = 'rgba(200, 180, 120, 0.8)';
           ctx.lineWidth = Math.min(width, height) * 0.018;
-          ctx.shadowColor = 'rgba(255, 215, 0, 0.6)';
+          ctx.shadowColor = 'rgba(200, 180, 120, 0.4)';
           ctx.shadowBlur = 12;
           ctx.stroke();
           [p1, p2].forEach(p => {
             ctx.beginPath();
             ctx.arc(p.x, p.y, Math.min(width, height)*0.04, 0, 2*Math.PI);
-            ctx.fillStyle = '#FFD700';
+            ctx.fillStyle = '#c0a060';
             ctx.shadowBlur = 18;
             ctx.fill();
           });
@@ -669,7 +656,6 @@
       ctx.shadowBlur = 0;
     }
 
-    // ---------- 星曜选择器（修改：选择后立即判断正确性并存储详情） ----------
     function showStarPicker(gua) {
       const picker = starPicker;
       const title = picker.querySelector('.picker-title');
@@ -681,13 +667,11 @@
         const btn = document.createElement('button');
         btn.textContent = star;
         btn.addEventListener('click', function() {
-          // 选择星曜
           fillStars[gua] = star;
-          // 判断是否正确
           if (star === fillTarget[gua]) {
             fillDetails[gua] = STAR_DETAIL[star] || '';
           } else {
-            delete fillDetails[gua]; // 清空错误详情
+            delete fillDetails[gua];
           }
           picker.style.display = 'none';
           renderGrid('fill');
@@ -708,7 +692,6 @@
       picker.style.display = 'flex';
     }
 
-    // ---------- 填空完成检查 ----------
     function checkFillComplete() {
       const allGuas = GUA_NO_MID;
       let allCorrect = true;
@@ -728,9 +711,9 @@
       }
       if (allCorrect && currentFuwei) {
         messageEl.textContent = '✅ 所有飞星正确！';
-        nextBtn.style.display = 'inline-block';
-        nextBtn.textContent = '🎉 完成';
-        nextBtn.disabled = false;
+        pairMsg.textContent = '🎉 所有飞星正确！';
+        pairDoneBtn.style.display = 'inline-block';
+        pairStatus.style.display = 'flex';
         return true;
       } else {
         let msg = '';
@@ -738,44 +721,42 @@
         if (wrong.length) msg += `错误：${wrong.join('；')}`;
         if (!msg) msg = '请先选择伏位';
         messageEl.textContent = '⚠️ ' + (msg || '尚未完成');
-        nextBtn.style.display = 'none';
+        pairStatus.style.display = 'none';
         return false;
       }
     }
 
-    // ---------- 模式切换 ----------
     function setMode(mode) {
       currentMode = mode;
       modeTabs.forEach(tab => {
         tab.classList.toggle('active', tab.dataset.mode === mode);
       });
+      pairStatus.style.display = 'none';
+      pairDoneBtn.style.display = 'none';
       if (mode === 'fill') {
         currentFuwei = null;
         fillStars = {};
         fillDetails = {};
         fillTarget = {};
-        nextBtn.style.display = 'none';
-        stepInfo.textContent = '🔮 选择伏位';
+        messageEl.textContent = '';
         renderFuweiSelector();
         renderGrid('fill');
-        messageEl.textContent = '请先选择一个伏位';
+        messageEl.textContent = '请选择伏位';
       } else {
         currentPairStar = null;
         pairCompleted = [];
         pairSelected = null;
-        nextBtn.style.display = 'none';
-        stepInfo.textContent = '🔗 选择星曜';
+        messageEl.textContent = '';
         renderPairSelector();
         renderGrid('pair');
-        messageEl.textContent = '请选择一个星曜进行配对';
+        messageEl.textContent = '请选择星曜';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
-    // ---------- 伏位选择 ----------
     function renderFuweiSelector() {
       const html = `
-        <p>请选择伏位（门向或坐山）：</p>
+        <span class="label">请选择伏位（门）：</span>
         <div class="option-grid" id="fuwei-grid">
           ${['乾','坎','艮','震','巽','离','坤','兑'].map(g =>
             `<button class="option-btn" data-gua="${g}">${g}</button>`
@@ -802,24 +783,21 @@
         delete fillDetails[g];
       });
       fillStars[gua] = '伏位';
-      fillDetails[gua] = STAR_DETAIL['伏位']; // 伏位详情直接显示
+      fillDetails[gua] = STAR_DETAIL['伏位'];
       renderGrid('fill');
-      stepInfo.textContent = `📝 伏位 ${gua}，请填飞星`;
-      messageEl.textContent = '点击宫位上的“选择”来填入飞星';
-      nextBtn.style.display = 'none';
+      messageEl.textContent = '点击“选择”填入飞星';
+      pairStatus.style.display = 'none';
     }
 
-    // ---------- 星曜配对选择 ----------
     function renderPairSelector() {
       const allStars = [...PAIR_STARS, '伏位'];
       const html = `
-        <p>选择要配对的星曜：</p>
+        <span class="label">选择要配对的星曜：</span>
         <div class="option-grid" id="star-grid">
           ${allStars.map(s =>
             `<button class="option-btn" data-star="${s}">${s}</button>`
           ).join('')}
         </div>
-        <div id="pair-hint-container"></div>
       `;
       selectorArea.innerHTML = html;
       document.querySelectorAll('#star-grid .option-btn').forEach(btn => {
@@ -837,31 +815,23 @@
       });
       pairCompleted = [];
       pairSelected = null;
-      nextBtn.style.display = 'none';
-
-      const hintContainer = document.getElementById('pair-hint-container');
+      pairStatus.style.display = 'none';
+      pairDoneBtn.style.display = 'none';
       if (star === '伏位') {
-        hintContainer.innerHTML = `<span class="pair-hint">🌟 伏位为自身，无需配对</span>`;
         messageEl.textContent = '🌟 伏位完成！';
-        stepInfo.textContent = '✅ 伏位完成';
+        pairMsg.textContent = '🎉 伏位完成！';
+        pairDoneBtn.style.display = 'inline-block';
+        pairStatus.style.display = 'flex';
         renderGrid('pair');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        nextBtn.style.display = 'inline-block';
-        nextBtn.textContent = '完成';
-        nextBtn.disabled = false;
         return;
       } else {
-        const pairs = PAIR_MAP[star];
-        const pairStr = pairs.map(p => p.join('-')).join('、');
-        hintContainer.innerHTML = `<span class="pair-hint">🔗 请配对：${pairStr}</span>`;
-        stepInfo.textContent = `🔗 配对：${star}`;
-        messageEl.textContent = `请将 ${star} 的四个配对两两点击连线`;
+        messageEl.textContent = `请为“${star}”配对`;
         renderGrid('pair');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
-    // ---------- 重置 ----------
     function resetGame() {
       currentFuwei = null;
       fillStars = {};
@@ -870,13 +840,13 @@
       currentPairStar = null;
       pairCompleted = [];
       pairSelected = null;
-      nextBtn.style.display = 'none';
+      pairStatus.style.display = 'none';
+      pairDoneBtn.style.display = 'none';
       messageEl.textContent = '';
-      stepInfo.classList.remove('victory');
-      setMode('fill');
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      setMode(currentMode);
     }
 
-    // ---------- 初始化 ----------
     function init() {
       modeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -884,20 +854,9 @@
         });
       });
       resetBtn.addEventListener('click', resetGame);
-      nextBtn.addEventListener('click', function() {
-        if (currentMode === 'fill') {
-          messageEl.textContent = '🎉 填空完成！可切换至“星曜配对”继续练习。';
-          stepInfo.classList.add('victory');
-          nextBtn.style.display = 'none';
-        } else if (currentMode === 'pair') {
-          if (currentPairStar === '伏位') {
-            messageEl.textContent = '🎉 伏位完成！';
-          } else {
-            messageEl.textContent = `🎉 “${currentPairStar}”配对完成！`;
-          }
-          stepInfo.classList.add('victory');
-          nextBtn.style.display = 'none';
-        }
+      pairDoneBtn.addEventListener('click', function() {
+        pairStatus.style.display = 'none';
+        messageEl.textContent = '已通关，可切换模式继续练习';
       });
       setMode('fill');
       window.addEventListener('resize', function() {
