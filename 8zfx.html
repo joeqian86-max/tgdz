@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
-      background: #2a2a3a;
+      background: #3a4050; /* 柔和深灰蓝 */
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -17,22 +17,23 @@
       margin: 0;
     }
     #app {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(4px);
       border-radius: 36px;
       padding: 20px 16px 28px;
       max-width: 560px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.04);
     }
     h1 {
       text-align: center;
       font-weight: 600;
-      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-size: clamp(1.2rem, 4vw, 1.8rem); /* 缩小 */
       color: #e8e0d8;
       text-shadow: 0 2px 8px rgba(0,0,0,0.5);
       margin: 0 0 4px 0;
+      white-space: nowrap; /* 防止换行 */
     }
     .subtitle {
       text-align: center;
@@ -228,7 +229,7 @@
       font-weight: 700;
     }
     .cell .star-detail {
-      font-size: clamp(0.6rem, 1.8vw, 0.85rem);
+      font-size: clamp(0.85rem, 2.2vw, 1.1rem); /* 放大 */
       opacity: 0.95;
       margin-top: 1px;
       color: inherit;
@@ -321,7 +322,7 @@
       .cell .top-row .symbol { font-size: clamp(1.4rem, 4.5vw, 2.2rem); }
       .cell .top-row { font-size: clamp(0.8rem, 3vw, 1.2rem); gap: 4px; }
       .cell .star-display { font-size: clamp(0.8rem, 2.4vw, 1.1rem); padding: 4px 10px; min-width: 54px; }
-      .cell .star-detail { font-size: clamp(0.5rem, 1.5vw, 0.7rem); white-space: nowrap; }
+      .cell .star-detail { font-size: clamp(0.75rem, 2.0vw, 0.95rem); white-space: nowrap; }
       .mode-tab { font-size: 0.9rem; padding: 6px 12px; }
       #reset-btn { font-size: 0.9rem; padding: 6px 14px; }
       .option-btn { font-size: 0.9rem; padding: 4px 12px; }
